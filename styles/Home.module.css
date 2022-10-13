@@ -14,12 +14,12 @@
 
 .list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 }
 
 .card {
-  width: 20rem;
+  max-width: 500px;
   box-shadow: 1px 2px 5px 0px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   text-align: center;
@@ -63,6 +63,7 @@
   justify-content: center;
   gap: 2rem;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .form > button {
@@ -91,4 +92,18 @@
   border: 1px solid gray;
   border-radius: 0.3rem;
   background: transparent;
+}
+@media (min-width: 768px) {
+  .list {
+    grid-template-columns: 1fr 1fr;
+  }
+  .card {
+    width: 20rem;
+    padding-top: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .list {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

@@ -22,7 +22,7 @@ a {
 .toggler {
   position: absolute;
   top: 5vh;
-  right: 10vw;
+  right: 5vw;
   border: none;
   border-radius: 50%;
   display: flex;

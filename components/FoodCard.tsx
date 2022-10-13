@@ -14,7 +14,7 @@ const FoodCard: FC<Props> = ({ food }) => {
         <Image
           src={`/img/${food.image}`}
           alt={food.name}
-          width={500}
+          width={600}
           height={400}
           objectFit="cover"
         />
