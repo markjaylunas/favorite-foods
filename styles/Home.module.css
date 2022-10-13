@@ -22,8 +22,8 @@
   width: 20rem;
   box-shadow: 1px 2px 5px 0px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
-  height: fit-content;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .image {
@@ -48,7 +48,7 @@
 }
 
 .details > h2 {
-  color: darkslategrey;
+  color: rgb(90, 165, 165);
   font-size: xx-large;
   margin: 0.4rem;
 }
@@ -74,6 +74,7 @@
 }
 .form > button:hover {
   opacity: 0.9;
+  cursor: pointer;
 }
 
 .form label {
@@ -85,8 +86,9 @@
 .input_group > input,
 .input_group > select {
   height: 2rem;
-  color: darkslategray;
+  color: rgb(90, 165, 165);
   padding-left: 1.2rem;
   border: 1px solid gray;
   border-radius: 0.3rem;
+  background: transparent;
 }
