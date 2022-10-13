@@ -5,15 +5,15 @@ import styles from "../styles/Home.module.css";
 import favoriteFoods from "../data/foods";
 import Foods from "../types/foods";
 import FoodCard from "../components/FoodCard";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 interface Props {
   foods: Foods;
 }
 
 enum Sort {
-  Default,
-  Rating,
+  Default = "Default",
+  Rating = "Rating",
 }
 
 interface FormData {
@@ -43,15 +43,20 @@ const Home: NextPage<Props> = ({ foods }) => {
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     if (formData.filter.length > 0) {
-      setFilteredFoods((foods) =>
-        foods.filter((food) =>
-          food.name.toLowerCase().includes(formData.filter.toLowerCase())
-        )
+      const filtered = foods.filter((food) =>
+        food.name.toLowerCase().includes(formData.filter.toLowerCase())
       );
+      setFilteredFoods(filtered);
     } else {
       setFilteredFoods(foods);
     }
   };
+  useEffect(() => {
+    if (formData.sort === Sort.Rating)
+      setFilteredFoods((item) => [...item].sort((a, b) => b.rating - a.rating));
+    if (formData.sort === Sort.Default)
+      setFilteredFoods((item) => [...item].sort((a, b) => b._id - a._id));
+  }, [formData.sort]);
 
   return (
     <div className={styles.container}>
@@ -74,10 +79,21 @@ const Home: NextPage<Props> = ({ foods }) => {
               onChange={handleOnChange}
             />
           </div>
+          <div>
+            <select
+              name="sort"
+              id="sort"
+              value={formData.sort}
+              onChange={handleOnChange}
+            >
+              <option value={Sort.Default}>{Sort.Default}</option>
+              <option value={Sort.Rating}>{Sort.Rating}</option>
+            </select>
+          </div>
           <button>Submit</button>
         </form>
 
-        <div>
+        <div className={styles.list}>
           {filteredFoods.map((food) => (
             <FoodCard food={food} key={food._id} />
           ))}
