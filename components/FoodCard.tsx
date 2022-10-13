@@ -21,8 +21,11 @@ const FoodCard: FC<Props> = ({ food }) => {
       </div>
       <div className={styles.details}>
         <h2>{food.name}</h2>
+        <span className={styles.rating}>
+          <span className={styles.label}>Rating: </span>
+          {food.rating}
+        </span>
         <p>{food.description}</p>
-        <span>rating:{food.rating}</span>
       </div>
     </div>
   );

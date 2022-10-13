@@ -12,8 +12,8 @@ interface Props {
 }
 
 enum Sort {
-  Default = "Default",
-  Rating = "Rating",
+  Increasing = "Increasing",
+  Decreasing = "Decreasing",
 }
 
 interface FormData {
@@ -22,7 +22,7 @@ interface FormData {
 }
 
 const Home: NextPage<Props> = ({ foods }) => {
-  const initialFormData = { filter: "", sort: Sort.Default };
+  const initialFormData = { filter: "", sort: Sort.Increasing };
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [filteredFoods, setFilteredFoods] = useState<Foods>(foods);
 
@@ -52,10 +52,10 @@ const Home: NextPage<Props> = ({ foods }) => {
     }
   };
   useEffect(() => {
-    if (formData.sort === Sort.Rating)
+    if (formData.sort === Sort.Increasing)
+      setFilteredFoods((item) => [...item].sort((a, b) => a.rating - b.rating));
+    if (formData.sort === Sort.Decreasing)
       setFilteredFoods((item) => [...item].sort((a, b) => b.rating - a.rating));
-    if (formData.sort === Sort.Default)
-      setFilteredFoods((item) => [...item].sort((a, b) => b._id - a._id));
   }, [formData.sort]);
 
   return (
@@ -66,11 +66,11 @@ const Home: NextPage<Props> = ({ foods }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header title="My Favorite Foods" />
+      <Header title="Favorite Foods" />
       <main className={styles.main}>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="filter">Filter</label>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.input_group}>
+            <label htmlFor="filter">Filter: </label>
             <input
               type="text"
               name="filter"
@@ -79,18 +79,19 @@ const Home: NextPage<Props> = ({ foods }) => {
               onChange={handleOnChange}
             />
           </div>
-          <div>
+          <button>Submit</button>
+          <div className={styles.input_group}>
+            <label htmlFor="sort">Rating : </label>
             <select
               name="sort"
               id="sort"
               value={formData.sort}
               onChange={handleOnChange}
             >
-              <option value={Sort.Default}>{Sort.Default}</option>
-              <option value={Sort.Rating}>{Sort.Rating}</option>
+              <option value={Sort.Increasing}>{Sort.Increasing}</option>
+              <option value={Sort.Decreasing}>{Sort.Decreasing}</option>
             </select>
           </div>
-          <button>Submit</button>
         </form>
 
         <div className={styles.list}>

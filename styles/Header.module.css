@@ -2,3 +2,8 @@
   display: flex;
   justify-content: center;
 }
+
+.header > h1 {
+  color: darkslategray;
+  font-size: xxx-large;
+}
