@@ -24,8 +24,12 @@
   border-radius: 10px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.05);
+  animation: fadein 1s ease-in-out;
 }
 
+.image:hover {
+  cursor: pointer;
+}
 .image {
   border-radius: 10px 10px 0 0;
   overflow: hidden;
@@ -93,6 +97,17 @@
   border-radius: 0.3rem;
   background: transparent;
 }
+
+.modal {
+  width: 50vw;
+}
+.modal-image {
+  width: 80vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (min-width: 768px) {
   .list {
     grid-template-columns: 1fr 1fr;
@@ -105,5 +120,16 @@
 @media (min-width: 1024px) {
   .list {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0%);
   }
 }
