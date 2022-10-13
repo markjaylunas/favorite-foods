@@ -11,3 +11,35 @@
   justify-content: center;
   align-items: center;
 }
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.card {
+  width: 20rem;
+  box-shadow: 1px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  height: fit-content;
+}
+
+.image {
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+
+.details {
+  color: grey;
+  padding: 0 1rem;
+  margin-bottom: 20px;
+}
+
+.details > h2 {
+  color: darkslategrey;
+}
+.details > p {
+  text-indent: 2rem;
+  text-align: justify;
+}
