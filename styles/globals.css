@@ -14,3 +14,41 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.toggle_container {
+  position: relative;
+  width: 100%;
+}
+.toggler {
+  position: absolute;
+  top: 5vh;
+  right: 10vw;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  background-color: transparent;
+}
+.toggler:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.theme-icon-dark,
+.theme-icon-light {
+  border-radius: 100%;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  background: rgba(103, 255, 222, 0.1);
+}
+.theme-icon-dark {
+  color: azure;
+  border: 2px solid white;
+}
+.theme-icon-light {
+  border: 2px solid black;
+  color: rgb(0, 0, 0);
+}
