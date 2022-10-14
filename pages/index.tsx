@@ -6,6 +6,8 @@ import foodListData from "../data/foodList";
 import FoodList from "../types/foodList";
 import FoodCard from "../components/FoodCard";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { Button } from "@mantine/core";
+import AddFoodForm from "../components/AddFoodForm";
 
 interface Props {
   foodList: FoodList;
@@ -25,7 +27,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
   const initialFormData = { filter: "", sort: Sort.Increasing };
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [filteredFoods, setFilteredFoods] = useState<FoodList>(foodList);
-
+  const [openedAddForm, setOpenedAddForm] = useState(false);
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -68,37 +70,51 @@ const Home: NextPage<Props> = ({ foodList }) => {
 
       <Header title="Favorite Foods" />
       <main className={styles.main}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.input_group}>
-            <label htmlFor="filter">Filter: </label>
-            <input
-              type="text"
-              name="filter"
-              id="filter"
-              value={formData.filter}
-              onChange={handleOnChange}
-            />
-          </div>
-          <button>Submit</button>
-          <div className={styles.input_group}>
-            <label htmlFor="sort">Rating : </label>
-            <select
-              name="sort"
-              id="sort"
-              value={formData.sort}
-              onChange={handleOnChange}
-            >
-              <option value={Sort.Increasing}>{Sort.Increasing}</option>
-              <option value={Sort.Decreasing}>{Sort.Decreasing}</option>
-            </select>
-          </div>
-        </form>
+        <div className={styles.control}>
+          <Button
+            variant="light"
+            color="teal"
+            leftIcon="+"
+            onClick={() => setOpenedAddForm(true)}
+          >
+            Add Food
+          </Button>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.input_group}>
+              <label htmlFor="filter">Filter: </label>
+              <input
+                type="text"
+                name="filter"
+                id="filter"
+                value={formData.filter}
+                onChange={handleOnChange}
+              />
+              <button>Submit</button>
+            </div>
+            <div className={styles.input_group}>
+              <label htmlFor="sort">Rating : </label>
+              <select
+                name="sort"
+                id="sort"
+                value={formData.sort}
+                onChange={handleOnChange}
+              >
+                <option value={Sort.Increasing}>{Sort.Increasing}</option>
+                <option value={Sort.Decreasing}>{Sort.Decreasing}</option>
+              </select>
+            </div>
+          </form>
+        </div>
 
         <div className={styles.list}>
           {filteredFoods.map((foodItem) => (
             <FoodCard foodItem={foodItem} key={foodItem._id} />
           ))}
         </div>
+        <AddFoodForm
+          openedAddForm={openedAddForm}
+          setOpenedAddForm={setOpenedAddForm}
+        />
       </main>
     </div>
   );

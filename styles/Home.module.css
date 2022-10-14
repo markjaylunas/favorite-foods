@@ -61,6 +61,13 @@
   text-align: justify;
 }
 
+.control {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+}
+
 .form {
   display: flex;
   align-items: center;
@@ -70,13 +77,19 @@
   flex-wrap: wrap;
 }
 
-.form > button {
+.form > div > button {
   padding: 0.4rem 1.2rem;
   border-radius: 0.2rem;
   border: none;
-  background-color: darkcyan;
+  background-color: #0ca678;
   color: white;
 }
+
+.form > div {
+  display: flex;
+  gap: 10px;
+}
+
 .form > button:hover {
   opacity: 0.9;
   cursor: pointer;
