@@ -1,14 +1,19 @@
 import { Modal, Textarea, TextInput } from "@mantine/core";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { FoodItem } from "../types/foodList";
+import FoodList, { FoodItem } from "../types/foodList";
 
 interface Props {
   openedAddForm: boolean;
   setOpenedAddForm: Dispatch<SetStateAction<boolean>>;
+  setInitialFoodList: Dispatch<SetStateAction<FoodList>>;
 }
 
-const AddFoodForm: FC<Props> = ({ openedAddForm, setOpenedAddForm }) => {
+const AddFoodForm: FC<Props> = ({
+  openedAddForm,
+  setOpenedAddForm,
+  setInitialFoodList,
+}) => {
   const {
     register,
     handleSubmit,
@@ -17,8 +22,9 @@ const AddFoodForm: FC<Props> = ({ openedAddForm, setOpenedAddForm }) => {
   } = useForm<FoodItem>();
 
   const onSubmit = (data: FoodItem) => {
+    const newFood = { ...data, _id: Date.now() };
+    setInitialFoodList((fooList) => [...fooList, newFood]);
     reset();
-    console.log(data);
   };
 
   return (

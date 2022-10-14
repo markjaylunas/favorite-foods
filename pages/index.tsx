@@ -24,9 +24,10 @@ interface FormData {
 }
 
 const Home: NextPage<Props> = ({ foodList }) => {
+  const [initialFoodList, setInitialFoodList] = useState<FoodList>(foodList);
   const initialFormData = { filter: "", sort: Sort.Increasing };
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [filteredFoods, setFilteredFoods] = useState<FoodList>(foodList);
+  const [filteredFoods, setFilteredFoods] = useState<FoodList>(initialFoodList);
   const [openedAddForm, setOpenedAddForm] = useState(false);
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -53,12 +54,17 @@ const Home: NextPage<Props> = ({ foodList }) => {
       setFilteredFoods(foodList);
     }
   };
+
   useEffect(() => {
     if (formData.sort === Sort.Increasing)
       setFilteredFoods((item) => [...item].sort((a, b) => a.rating - b.rating));
     if (formData.sort === Sort.Decreasing)
       setFilteredFoods((item) => [...item].sort((a, b) => b.rating - a.rating));
   }, [formData.sort]);
+
+  useEffect(() => {
+    setFilteredFoods(initialFoodList);
+  }, [initialFoodList]);
 
   return (
     <div className={styles.container}>
@@ -114,6 +120,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
         <AddFoodForm
           openedAddForm={openedAddForm}
           setOpenedAddForm={setOpenedAddForm}
+          setInitialFoodList={setInitialFoodList}
         />
       </main>
     </div>
