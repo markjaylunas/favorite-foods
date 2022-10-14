@@ -84,15 +84,14 @@
   background-color: #0ca678;
   color: white;
 }
+.form > button:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
 
 .form > div {
   display: flex;
   gap: 10px;
-}
-
-.form > button:hover {
-  opacity: 0.9;
-  cursor: pointer;
 }
 
 .form label {
