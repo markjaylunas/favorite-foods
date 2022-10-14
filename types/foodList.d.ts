@@ -1,4 +1,4 @@
-export interface Food {
+export interface FoodItem {
   _id: number;
   name: string;
   description: string;
@@ -6,6 +6,6 @@ export interface Food {
   rating: number;
 }
 
-type Foods = Food[];
+type FoodList = FoodItem[];
 
-export default Foods;
+export default FoodList;

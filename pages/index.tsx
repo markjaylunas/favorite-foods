@@ -2,13 +2,13 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Header from "../components/Header";
 import styles from "../styles/Home.module.css";
-import favoriteFoods from "../data/foods";
-import Foods from "../types/foods";
+import foodListData from "../data/foods";
+import FoodList from "../types/foodList";
 import FoodCard from "../components/FoodCard";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 interface Props {
-  foods: Foods;
+  foodList: FoodList;
 }
 
 enum Sort {
@@ -21,10 +21,10 @@ interface FormData {
   sort: Sort;
 }
 
-const Home: NextPage<Props> = ({ foods }) => {
+const Home: NextPage<Props> = ({ foodList }) => {
   const initialFormData = { filter: "", sort: Sort.Increasing };
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [filteredFoods, setFilteredFoods] = useState<Foods>(foods);
+  const [filteredFoods, setFilteredFoods] = useState<FoodList>(foodList);
 
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -43,12 +43,12 @@ const Home: NextPage<Props> = ({ foods }) => {
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     if (formData.filter.length > 0) {
-      const filtered = foods.filter((food) =>
+      const filtered = foodList.filter((food) =>
         food.name.toLowerCase().includes(formData.filter.toLowerCase())
       );
       setFilteredFoods(filtered);
     } else {
-      setFilteredFoods(foods);
+      setFilteredFoods(foodList);
     }
   };
   useEffect(() => {
@@ -61,8 +61,8 @@ const Home: NextPage<Props> = ({ foods }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Favorite Food</title>
-        <meta name="description" content="List of my favorite foods" />
+        <title>Favourite Food</title>
+        <meta name="description" content="List of my favourite foods" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -107,10 +107,10 @@ const Home: NextPage<Props> = ({ foods }) => {
 export default Home;
 
 export const getServerSideProps = async () => {
-  const foods = favoriteFoods;
+  const foodList = foodListData;
   return {
     props: {
-      foods,
+      foodList,
     },
   };
 };

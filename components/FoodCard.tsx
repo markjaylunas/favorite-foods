@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Food } from "../types/foods";
+import { Food } from "../types/foodList";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { Modal } from "@mantine/core";

@@ -1,4 +1,4 @@
-import Foods from "../types/foods";
+import Foods from "../types/foodList";
 
 const favoriteFoods: Foods = [
   {
