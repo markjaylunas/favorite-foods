@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
-import { Food } from "../types/foodList";
+import { FoodItem } from "../types/foodList";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { Modal } from "@mantine/core";
 interface Props {
-  food: Food;
+  foodItem: FoodItem;
 }
 
-const FoodCard: FC<Props> = ({ food }) => {
+const FoodCard: FC<Props> = ({ foodItem }) => {
   const [opened, setOpened] = useState(false);
   return (
     <div className={styles.card}>
@@ -15,13 +15,13 @@ const FoodCard: FC<Props> = ({ food }) => {
         <Modal
           opened={opened}
           size="auto"
-          title={food.name}
+          title={foodItem.title}
           onClose={() => setOpened(false)}
         >
           <div className="modal-image">
             <Image
-              src={`/img/${food.image}`}
-              alt={food.name}
+              src={`/img/${foodItem.image}`}
+              alt={foodItem.title}
               width={800}
               height={600}
               objectFit="cover"
@@ -32,8 +32,8 @@ const FoodCard: FC<Props> = ({ food }) => {
       </div>
       <div className={styles.image}>
         <Image
-          src={`/img/${food.image}`}
-          alt={food.name}
+          src={`/img/${foodItem.image}`}
+          alt={foodItem.title}
           width={600}
           height={400}
           objectFit="cover"
@@ -41,12 +41,12 @@ const FoodCard: FC<Props> = ({ food }) => {
         />
       </div>
       <div className={styles.details}>
-        <h2>{food.name}</h2>
+        <h2>{foodItem.title}</h2>
         <span className={styles.rating}>
           <span className={styles.label}>Rating: </span>
-          {food.rating}
+          {foodItem.rating}
         </span>
-        <p>{food.description}</p>
+        <p>{foodItem.description}</p>
       </div>
     </div>
   );

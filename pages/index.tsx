@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Header from "../components/Header";
 import styles from "../styles/Home.module.css";
-import foodListData from "../data/foods";
+import foodListData from "../data/foodList";
 import FoodList from "../types/foodList";
 import FoodCard from "../components/FoodCard";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
@@ -44,7 +44,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
     event.preventDefault();
     if (formData.filter.length > 0) {
       const filtered = foodList.filter((food) =>
-        food.name.toLowerCase().includes(formData.filter.toLowerCase())
+        food.title.toLowerCase().includes(formData.filter.toLowerCase())
       );
       setFilteredFoods(filtered);
     } else {
@@ -95,8 +95,8 @@ const Home: NextPage<Props> = ({ foodList }) => {
         </form>
 
         <div className={styles.list}>
-          {filteredFoods.map((food) => (
-            <FoodCard food={food} key={food._id} />
+          {filteredFoods.map((foodItem) => (
+            <FoodCard foodItem={foodItem} key={foodItem._id} />
           ))}
         </div>
       </main>
