@@ -15,14 +15,7 @@ a {
   box-sizing: border-box;
 }
 
-.toggle_container {
-  position: relative;
-  width: 100%;
-}
 .toggler {
-  position: absolute;
-  top: 5vh;
-  right: 5vw;
   border: none;
   border-radius: 50%;
   display: flex;
@@ -36,6 +29,10 @@ a {
   cursor: pointer;
 }
 
+.theme-icon-dark:focus,
+.theme-icon-light:focus {
+  outline: none;
+}
 .theme-icon-dark,
 .theme-icon-light {
   border-radius: 100%;

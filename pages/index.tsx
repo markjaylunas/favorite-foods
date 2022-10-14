@@ -83,7 +83,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
           </Button>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.input_group}>
-              <label htmlFor="filter">Filter: </label>
+              <label htmlFor="filter">Search: </label>
               <input
                 type="text"
                 name="filter"

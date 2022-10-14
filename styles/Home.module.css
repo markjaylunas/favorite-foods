@@ -1,5 +1,8 @@
 .container {
   padding: 0 2rem;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .main {
@@ -16,6 +19,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .card {
@@ -63,17 +67,20 @@
 
 .control {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 40px;
+  flex-direction: column-reverse;
+  gap: 0.4rem;
+}
+
+.control > button {
+  align-self: flex-start;
+  width: fit-content;
 }
 
 .form {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
@@ -128,10 +135,24 @@
     width: 20rem;
     padding-top: 0;
   }
+  .form {
+    gap: 0.4rem;
+  }
+  .control {
+    flex-direction: row-reverse;
+  }
 }
 @media (min-width: 1024px) {
   .list {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .control {
+    justify-content: space-between;
+    gap: 2rem;
+    width: 100%;
+  }
+  .form {
+    gap: 2rem;
   }
 }
 
