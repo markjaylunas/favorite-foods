@@ -7,24 +7,28 @@ interface Props {
   openedAddForm: boolean;
   setOpenedAddForm: Dispatch<SetStateAction<boolean>>;
   setInitialFoodList: Dispatch<SetStateAction<FoodList>>;
+  setFilteredFoods: Dispatch<SetStateAction<FoodList>>;
 }
 
 const AddFoodForm: FC<Props> = ({
   openedAddForm,
   setOpenedAddForm,
   setInitialFoodList,
+  setFilteredFoods,
 }) => {
   const {
     register,
     handleSubmit,
-    reset,
+    // reset,
     formState: { errors },
   } = useForm<FoodItem>();
 
   const onSubmit = (data: FoodItem) => {
     const newFood = { ...data, _id: Date.now() };
-    setInitialFoodList((fooList) => [...fooList, newFood]);
-    reset();
+    setInitialFoodList((foodList) => [...foodList, newFood]);
+    setFilteredFoods((foodList) => [...foodList, newFood]);
+    // reset();
+    setOpenedAddForm(false);
   };
 
   return (

@@ -24,9 +24,9 @@ interface FormData {
 }
 
 const Home: NextPage<Props> = ({ foodList }) => {
-  const [initialFoodList, setInitialFoodList] = useState<FoodList>(foodList);
   const initialFormData = { filter: "", sort: Sort.Increasing };
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [initialFoodList, setInitialFoodList] = useState<FoodList>(foodList);
   const [filteredFoods, setFilteredFoods] = useState<FoodList>(initialFoodList);
   const [openedAddForm, setOpenedAddForm] = useState(false);
   const handleOnChange = (
@@ -46,12 +46,12 @@ const Home: NextPage<Props> = ({ foodList }) => {
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     if (formData.filter.length > 0) {
-      const filtered = foodList.filter((food) =>
+      const filtered = initialFoodList.filter((food) =>
         food.title.toLowerCase().includes(formData.filter.toLowerCase())
       );
       setFilteredFoods(filtered);
     } else {
-      setFilteredFoods(foodList);
+      setFilteredFoods(initialFoodList);
     }
   };
 
@@ -61,10 +61,6 @@ const Home: NextPage<Props> = ({ foodList }) => {
     if (formData.sort === Sort.Decreasing)
       setFilteredFoods((item) => [...item].sort((a, b) => b.rating - a.rating));
   }, [formData.sort]);
-
-  useEffect(() => {
-    setFilteredFoods(initialFoodList);
-  }, [initialFoodList]);
 
   return (
     <div className={styles.container}>
@@ -121,6 +117,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
           openedAddForm={openedAddForm}
           setOpenedAddForm={setOpenedAddForm}
           setInitialFoodList={setInitialFoodList}
+          setFilteredFoods={setFilteredFoods}
         />
       </main>
     </div>
