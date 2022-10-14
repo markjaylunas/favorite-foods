@@ -32,7 +32,7 @@ const FoodCard: FC<Props> = ({ foodItem }) => {
       </div>
       <div className={styles.image}>
         <Image
-          src={`/img/${foodItem.image}`}
+          src={foodItem.image}
           alt={foodItem.title}
           width={600}
           height={400}
