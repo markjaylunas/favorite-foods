@@ -1,9 +1,4 @@
-import {
-  Modal,
-  Textarea,
-  TextInput,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Modal, Textarea, TextInput } from "@mantine/core";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -29,24 +24,13 @@ const AddFoodForm: FC<Props> = ({
     formState: { errors },
   } = useForm<FoodItem>();
 
-  const { colorScheme } = useMantineColorScheme();
-
   const onSubmit = (data: FoodItem) => {
     const newFood = { ...data, _id: Date.now() };
     setInitialFoodList((foodList) => [...foodList, newFood]);
     setFilteredFoods((foodList) => [...foodList, newFood]);
     reset();
     setOpenedAddForm(false);
-    toast(`${newFood.title} added to favourite foods`, {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: colorScheme,
-    });
+    toast(`${newFood.title} added to favourite foods`);
   };
 
   return (

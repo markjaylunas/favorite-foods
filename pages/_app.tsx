@@ -41,7 +41,7 @@ export default function App(props: AppProps) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="light"
+            theme={colorScheme}
           />
         </MantineProvider>
       </ColorSchemeProvider>
