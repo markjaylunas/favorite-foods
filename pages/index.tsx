@@ -26,7 +26,8 @@ interface FormData {
 const Home: NextPage<Props> = ({ foodList }) => {
   const initialFormData = { filter: "", sort: Sort.Increasing };
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [filteredFoods, setFilteredFoods] = useState<FoodList>(foodList);
+  const [initialFoodList, setInitialFoodList] = useState<FoodList>(foodList);
+  const [filteredFoods, setFilteredFoods] = useState<FoodList>(initialFoodList);
   const [openedAddForm, setOpenedAddForm] = useState(false);
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -45,14 +46,15 @@ const Home: NextPage<Props> = ({ foodList }) => {
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     if (formData.filter.length > 0) {
-      const filtered = foodList.filter((food) =>
+      const filtered = initialFoodList.filter((food) =>
         food.title.toLowerCase().includes(formData.filter.toLowerCase())
       );
       setFilteredFoods(filtered);
     } else {
-      setFilteredFoods(foodList);
+      setFilteredFoods(initialFoodList);
     }
   };
+
   useEffect(() => {
     if (formData.sort === Sort.Increasing)
       setFilteredFoods((item) => [...item].sort((a, b) => a.rating - b.rating));
@@ -81,7 +83,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
           </Button>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.input_group}>
-              <label htmlFor="filter">Filter: </label>
+              <label htmlFor="filter">Search: </label>
               <input
                 type="text"
                 name="filter"
@@ -114,6 +116,8 @@ const Home: NextPage<Props> = ({ foodList }) => {
         <AddFoodForm
           openedAddForm={openedAddForm}
           setOpenedAddForm={setOpenedAddForm}
+          setInitialFoodList={setInitialFoodList}
+          setFilteredFoods={setFilteredFoods}
         />
       </main>
     </div>

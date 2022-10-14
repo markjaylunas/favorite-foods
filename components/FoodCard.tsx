@@ -20,7 +20,7 @@ const FoodCard: FC<Props> = ({ foodItem }) => {
         >
           <div className="modal-image">
             <Image
-              src={`/img/${foodItem.image}`}
+              src={foodItem.image}
               alt={foodItem.title}
               width={800}
               height={600}
