@@ -18,6 +18,18 @@
   align-items: center;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header > h1 {
+  color: rgb(90, 165, 165);
+  font-size: xxx-large;
+  margin: 0;
+}
+
 .list {
   display: grid;
   grid-template-columns: 1fr;

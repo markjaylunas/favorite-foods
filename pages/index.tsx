@@ -1,19 +1,20 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Header from "../components/Header";
 import styles from "../styles/Home.module.css";
 import foodListData from "../data/foodList";
-import FoodList from "../types/foodList";
-import FoodCard from "../components/FoodCard";
+import IFoodList from "../types/foodList";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Button } from "@mantine/core";
 import AddFoodForm from "../components/AddFoodForm";
+import ThemeButton from "../components/ThemeButton";
+import FoodList from "../components/FoodList";
 
 interface Props {
-  foodList: FoodList;
+  foodList: IFoodList;
 }
 
 enum Sort {
+  Default = "Default",
   Increasing = "Increasing",
   Decreasing = "Decreasing",
 }
@@ -23,11 +24,17 @@ interface FormData {
   sort: Sort;
 }
 
+export const sortByIncreasing = (arr: FoodList) =>
+  arr.sort((a, b) => a.rating - b.rating);
+export const sortByDecreasing = (arr: FoodList) =>
+  arr.sort((a, b) => b.rating - a.rating);
+
 const Home: NextPage<Props> = ({ foodList }) => {
-  const initialFormData = { filter: "", sort: Sort.Increasing };
+  const initialFormData = { filter: "", sort: Sort.Default };
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [initialFoodList, setInitialFoodList] = useState<FoodList>(foodList);
-  const [filteredFoods, setFilteredFoods] = useState<FoodList>(initialFoodList);
+  const [initialFoodList, setInitialFoodList] = useState<IFoodList>(foodList);
+  const [filteredFoods, setFilteredFoods] =
+    useState<IFoodList>(initialFoodList);
   const [openedAddForm, setOpenedAddForm] = useState(false);
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -57,10 +64,11 @@ const Home: NextPage<Props> = ({ foodList }) => {
 
   useEffect(() => {
     if (formData.sort === Sort.Increasing)
-      setFilteredFoods((item) => [...item].sort((a, b) => a.rating - b.rating));
-    if (formData.sort === Sort.Decreasing)
-      setFilteredFoods((item) => [...item].sort((a, b) => b.rating - a.rating));
-  }, [formData.sort]);
+      setFilteredFoods((item) => sortByIncreasing([...item]));
+    else if (formData.sort === Sort.Decreasing)
+      setFilteredFoods((item) => sortByDecreasing([...item]));
+    else setFilteredFoods(initialFoodList);
+  }, [formData.sort, initialFoodList]);
 
   return (
     <div className={styles.container}>
@@ -70,7 +78,10 @@ const Home: NextPage<Props> = ({ foodList }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header title="Favorite Foods" />
+      <header className={styles.header}>
+        <h1>Favourite Foods</h1>
+        <ThemeButton />
+      </header>
       <main className={styles.main}>
         <div className={styles.control}>
           <Button
@@ -101,6 +112,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
                 value={formData.sort}
                 onChange={handleOnChange}
               >
+                <option value={Sort.Default}>{Sort.Default}</option>
                 <option value={Sort.Increasing}>{Sort.Increasing}</option>
                 <option value={Sort.Decreasing}>{Sort.Decreasing}</option>
               </select>
@@ -108,15 +120,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
           </form>
         </div>
 
-        <div className={styles.list}>
-          {filteredFoods.length > 0 ? (
-            filteredFoods.map((foodItem) => (
-              <FoodCard foodItem={foodItem} key={foodItem._id} />
-            ))
-          ) : (
-            <h2>Food not found</h2>
-          )}
-        </div>
+        <FoodList foodList={filteredFoods} />
         <AddFoodForm
           openedAddForm={openedAddForm}
           setOpenedAddForm={setOpenedAddForm}
