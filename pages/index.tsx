@@ -109,9 +109,13 @@ const Home: NextPage<Props> = ({ foodList }) => {
         </div>
 
         <div className={styles.list}>
-          {filteredFoods.map((foodItem) => (
-            <FoodCard foodItem={foodItem} key={foodItem._id} />
-          ))}
+          {filteredFoods.length > 0 ? (
+            filteredFoods.map((foodItem) => (
+              <FoodCard foodItem={foodItem} key={foodItem._id} />
+            ))
+          ) : (
+            <h2>Food not found</h2>
+          )}
         </div>
         <AddFoodForm
           openedAddForm={openedAddForm}

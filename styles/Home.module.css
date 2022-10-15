@@ -1,4 +1,7 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 0 2rem;
   max-width: fit-content;
   margin-left: auto;
@@ -6,7 +9,7 @@
 }
 
 .main {
-  min-height: 100vh;
+  min-width: 100%;
   margin-bottom: 4rem;
   flex: 1;
   display: flex;
