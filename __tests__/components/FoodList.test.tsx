@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import FoodList from "../../components/FoodList";
 import foodList from "../../data/foodList";
-import { sortByDecreasing, sortByIncreasing } from "../../pages/index";
+import { sortByDecreasing, sortByIncreasing } from "../../components/FoodList";
 
 const expectedFoodList = foodList;
 

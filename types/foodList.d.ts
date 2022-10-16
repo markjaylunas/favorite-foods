@@ -4,6 +4,7 @@ export interface FoodItem {
   description: string;
   image: string;
   rating: number;
+  phone?: string;
 }
 
 type FoodList = FoodItem[];
