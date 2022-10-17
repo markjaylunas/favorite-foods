@@ -3,7 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import foodListData from "../data/foodList";
 import IFoodList from "../types/foodList";
-import FoodList from "../components/FoodList";
+import FoodList, { Type } from "../components/FoodList";
 
 interface Props {
   foodList: IFoodList;
@@ -22,7 +22,7 @@ const Home: NextPage<Props> = ({ foodList }) => {
         <h1>Favourite Foods</h1>
       </header>
       <main className={styles.main}>
-        <FoodList foodList={foodList} />
+        <FoodList type={Type.Food} foodList={foodList} />
       </main>
     </div>
   );
