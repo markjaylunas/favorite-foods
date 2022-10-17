@@ -6,6 +6,7 @@ import FoodList from "../../components/FoodList";
 // import MovieList from "../../types/movieList";
 import axios from "axios";
 import MovieList from "../../types/movieList";
+import { Type } from "../../components/FoodList";
 
 interface Props {
   movieList: IFoodList;
@@ -24,7 +25,7 @@ const MoviePage: NextPage<Props> = ({ movieList }) => {
         <h1>Favourite Movies</h1>
       </header>
       <main className={styles.main}>
-        <FoodList foodList={movieList} />
+        <FoodList type={Type.Movie} foodList={movieList} />
       </main>
     </div>
   );

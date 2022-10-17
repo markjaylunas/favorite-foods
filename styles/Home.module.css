@@ -44,6 +44,7 @@
   text-align: center;
   background-color: rgba(255, 255, 255, 0.05);
   animation: fadein 500ms ease-in-out;
+  text-align: left;
 }
 
 .image:hover {
@@ -58,6 +59,8 @@
   font-weight: 500;
   color: darkgoldenrod;
   font-size: larger;
+  padding-left: 5px;
+  margin: 0;
 }
 
 .label {
@@ -75,9 +78,15 @@
   font-size: xx-large;
   margin: 0.4rem;
 }
-.details > p {
+.details > .description {
   text-indent: 2rem;
   text-align: justify;
+}
+.phone {
+  display: flex;
+  margin: 0;
+  padding-left: 5px;
+  color: #008e64;
 }
 
 .control {
@@ -106,7 +115,7 @@
   background-color: #0ca678;
   color: white;
 }
-.form > button:hover {
+.form button:hover {
   opacity: 0.9;
   cursor: pointer;
 }

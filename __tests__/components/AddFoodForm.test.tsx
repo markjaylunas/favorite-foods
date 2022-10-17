@@ -3,11 +3,13 @@ import { screen, render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import AddFoodForm from "../../components/AddFoodForm";
 import { act } from "react-dom/test-utils";
+import { Type } from "../../components/FoodList";
 
 describe("AddFoodForm Component", () => {
-  it("should render the text fields", () => {
+  it("should render the form fields", () => {
     render(
       <AddFoodForm
+        type={Type.Food}
         openedAddForm={true}
         setOpenedAddForm={jest.fn()}
         setInitialFoodList={jest.fn()}
@@ -19,20 +21,23 @@ describe("AddFoodForm Component", () => {
       name: /description/i,
     });
     const formImage = screen.getByRole("textbox", { name: /image/i });
-    const formRating = screen.getByRole("textbox", { name: /rating/i });
+    const formRating = screen.getByRole("spinbutton", { name: /rating/i });
+    const formPhone = screen.getByRole("spinbutton", { name: /phone/i });
     const formAddButton = screen.getByRole("button", {
-      name: /add food to list/i,
+      name: /save/i,
     });
     expect(formTitle).toBeInTheDocument();
     expect(formDescription).toBeInTheDocument();
     expect(formImage).toBeInTheDocument();
     expect(formRating).toBeInTheDocument();
+    expect(formPhone).toBeInTheDocument();
     expect(formAddButton).toBeInTheDocument();
   });
   it("should validate form fields", async () => {
     const mockAdd = jest.fn();
     render(
       <AddFoodForm
+        type={Type.Food}
         openedAddForm={true}
         setOpenedAddForm={jest.fn()}
         setInitialFoodList={jest.fn()}
@@ -56,13 +61,18 @@ describe("AddFoodForm Component", () => {
           "https://res.cloudinary.com/daswosnui/image/upload/v1665732396/bagnet_vqia4s.jpg",
       },
     });
-    fireEvent.input(screen.getByRole("textbox", { name: /rating/i }), {
+    fireEvent.input(screen.getByRole("spinbutton", { name: /rating/i }), {
       target: {
         value: 2.5,
       },
     });
+    fireEvent.input(screen.getByRole("spinbutton", { name: /phone/i }), {
+      target: {
+        value: "09123456789",
+      },
+    });
 
-    fireEvent.submit(screen.getByRole("button", { name: /add food to list/i }));
+    fireEvent.submit(screen.getByRole("button", { name: /save/i }));
     await act(async () => {
       expect(mockAdd).not.toBeCalled();
     });

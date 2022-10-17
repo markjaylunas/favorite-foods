@@ -2,7 +2,7 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import FoodList from "../../components/FoodList";
+import FoodList, { Type } from "../../components/FoodList";
 import foodList from "../../data/foodList";
 import { sortByDecreasing, sortByIncreasing } from "../../components/FoodList";
 
@@ -10,12 +10,12 @@ const expectedFoodList = foodList;
 
 describe("Render FoodList Component", () => {
   it("should render food not found if food list not greater than 1", () => {
-    render(<FoodList foodList={[]} />);
+    render(<FoodList type={Type.Food} foodList={[]} />);
     const foodNotFound = screen.getByText("Food not found");
     expect(foodNotFound).toBeInTheDocument();
   });
   it("should render food from the food list", () => {
-    render(<FoodList foodList={expectedFoodList} />);
+    render(<FoodList type={Type.Food} foodList={expectedFoodList} />);
     expectedFoodList.map((food) => {
       const foodItemImage = screen.getByAltText(food.title);
       const foodItemTitle = screen.getByText(food.title);

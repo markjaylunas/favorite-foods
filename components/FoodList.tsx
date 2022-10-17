@@ -6,8 +6,14 @@ import { Button } from "@mantine/core";
 import AddFoodForm from "../components/AddFoodForm";
 import IFoodList from "../types/foodList";
 
+export enum Type {
+  Food = "Food",
+  Movie = "Movie",
+}
+
 interface Props {
   foodList: FoodList;
+  type: Type;
 }
 
 enum Sort {
@@ -26,13 +32,14 @@ export const sortByIncreasing = (arr: FoodList) =>
 export const sortByDecreasing = (arr: FoodList) =>
   arr.sort((a, b) => b.rating - a.rating);
 
-const FoodList: FC<Props> = ({ foodList }) => {
+const FoodList: FC<Props> = ({ foodList, type = Type.Food }) => {
   const initialFormData = { filter: "", sort: Sort.Default };
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [initialFoodList, setInitialFoodList] = useState<IFoodList>(foodList);
   const [filteredFoods, setFilteredFoods] =
     useState<IFoodList>(initialFoodList);
   const [openedAddForm, setOpenedAddForm] = useState(false);
+
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -76,7 +83,7 @@ const FoodList: FC<Props> = ({ foodList }) => {
           leftIcon="+"
           onClick={() => setOpenedAddForm(true)}
         >
-          Add Food
+          Add {type}
         </Button>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.input_group}>
@@ -116,6 +123,7 @@ const FoodList: FC<Props> = ({ foodList }) => {
       </div>
 
       <AddFoodForm
+        type={type}
         openedAddForm={openedAddForm}
         setOpenedAddForm={setOpenedAddForm}
         setInitialFoodList={setInitialFoodList}
