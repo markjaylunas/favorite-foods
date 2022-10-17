@@ -24,7 +24,7 @@ const FoodCard: FC<Props> = ({ foodItem }) => {
               alt={foodItem.title}
               width={800}
               height={600}
-              objectFit="cover"
+              objectFit="contain"
               onClick={() => setOpened(true)}
             />
           </div>
