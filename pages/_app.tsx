@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { GetServerSidePropsContext } from "next";
 import { getCookie, setCookie } from "cookies-next";
+import NavBar from "../components/NavBar";
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -37,6 +38,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         withNormalizeCSS
         theme={{ colorScheme }}
       >
+        <NavBar />
         <Component {...pageProps} />
         <ToastContainer
           position="bottom-right"
