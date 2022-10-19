@@ -5,9 +5,9 @@ import foodListData from "../data/foodList";
 import IFoodList from "../types/foodList";
 import FoodList, { Type } from "../components/FoodList";
 
-interface Props {
+type Props = {
   foodList: IFoodList;
-}
+};
 
 const Home: NextPage<Props> = ({ foodList }) => {
   return (

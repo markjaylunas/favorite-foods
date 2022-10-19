@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 import FoodList, { FoodItem } from "../types/foodList";
 import { Type } from "./FoodList";
 
-interface Props {
+type Props = {
   type: Type;
   openedAddForm: boolean;
   setOpenedAddForm: Dispatch<SetStateAction<boolean>>;
   setInitialFoodList: Dispatch<SetStateAction<FoodList>>;
   setFilteredFoods: Dispatch<SetStateAction<FoodList>>;
-}
+};
 
 const AddFoodForm: FC<Props> = ({
   type,

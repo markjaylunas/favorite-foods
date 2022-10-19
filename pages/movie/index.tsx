@@ -8,9 +8,9 @@ import axios from "axios";
 import MovieList from "../../types/movieList";
 import { Type } from "../../components/FoodList";
 
-interface Props {
+type Props = {
   movieList: IFoodList;
-}
+};
 
 const MoviePage: NextPage<Props> = ({ movieList }) => {
   return (

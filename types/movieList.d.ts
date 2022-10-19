@@ -1,4 +1,4 @@
-export interface MovieItem {
+export type MovieItem = {
   id: number;
   title: string;
   overview: string;
@@ -6,7 +6,7 @@ export interface MovieItem {
   popularity: number;
   vote_average: number;
   phone?: string;
-}
+};
 
 type MovieList = MovieItem[];
 

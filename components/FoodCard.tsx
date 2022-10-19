@@ -3,9 +3,10 @@ import { FoodItem } from "../types/foodList";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { Modal } from "@mantine/core";
-interface Props {
+
+type Props = {
   foodItem: FoodItem;
-}
+};
 
 const FoodCard: FC<Props> = ({ foodItem }) => {
   const [opened, setOpened] = useState(false);

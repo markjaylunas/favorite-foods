@@ -11,10 +11,10 @@ export enum Type {
   Movie = "Movie",
 }
 
-interface Props {
+type Props = {
   foodList: FoodList;
   type: Type;
-}
+};
 
 enum Sort {
   Default = "Default",
@@ -22,10 +22,10 @@ enum Sort {
   Decreasing = "Decreasing",
 }
 
-interface FormData {
+type FormData = {
   filter: string;
   sort: Sort;
-}
+};
 
 export const sortByIncreasing = (arr: FoodList) =>
   arr.sort((a, b) => a.rating - b.rating);
