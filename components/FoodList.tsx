@@ -115,7 +115,7 @@ const FoodList: FC<Props> = ({ foodList, type = Type.Food }) => {
       <div className={styles.list}>
         {filteredFoods.length > 0 ? (
           filteredFoods.map((foodItem) => (
-            <FoodCard foodItem={foodItem} key={foodItem._id} />
+            <FoodCard foodItem={foodItem} key={foodItem.id} />
           ))
         ) : (
           <h2>Food not found</h2>

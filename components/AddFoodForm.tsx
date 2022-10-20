@@ -36,7 +36,7 @@ const AddFoodForm: FC<Props> = ({
       data.phone === undefined
         ? data
         : { ...data, phone: formatPhone(data.phone) };
-    const newFood = { ...dataFormatPhone, _id: Date.now() };
+    const newFood = { ...dataFormatPhone };
     setInitialFoodList((foodList) => [...foodList, newFood]);
     setFilteredFoods((foodList) => [...foodList, newFood]);
     reset();

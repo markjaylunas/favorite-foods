@@ -41,7 +41,7 @@ export const getServerSideProps = async () => {
   const data: MovieList = await response.data.results;
   const movieList: IFoodList = data.map((movie) => {
     return {
-      _id: movie.id,
+      id: movie.id,
       title: movie.title,
       description: movie.overview,
       image: `https://image.tmdb.org/t/p/original${movie.poster_path}`,

@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import foodListData from "../data/foodList";
 import IFoodList from "../types/foodList";
 import FoodList, { Type } from "../components/FoodList";
+import { supabase } from "../utils/supabase";
 
 type Props = {
   foodList: IFoodList;
@@ -31,10 +31,11 @@ const Home: NextPage<Props> = ({ foodList }) => {
 export default Home;
 
 export const getServerSideProps = async () => {
-  const foodList = foodListData;
+  const { data: Food } = await supabase.from("Food").select("*");
+
   return {
     props: {
-      foodList,
+      foodList: Food,
     },
   };
 };
