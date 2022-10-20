@@ -1,15 +1,19 @@
-import { Container, TextInput, Title } from "@mantine/core";
-import axios from "axios";
+import { Container, Loader, TextInput, Title } from "@mantine/core";
 import type { NextPage } from "next";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { supabase } from "../utils/supabase";
 
 type Form = {
   email: string;
   password: string;
 };
 
-const RegisterPage: NextPage = () => {
+const SignInPage: NextPage = () => {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -17,25 +21,32 @@ const RegisterPage: NextPage = () => {
     formState: { errors },
   } = useForm<Form>();
 
-  const registerUser = async (data: Form) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const res = await axios.post("/api/register", data, config);
+  const router = useRouter();
 
-    const result = await res.data;
-    console.log(result);
+  const signInWithEmail = async ({ email, password }: Form) => {
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+    if (error) {
+      toast.error(error.message);
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+    router.push("/");
+    toast(`Signed in as ${data.user?.email}`);
   };
 
   const onSubmit = (data: Form) => {
-    registerUser(data);
+    signInWithEmail(data);
     reset();
   };
+
   return (
     <Container size="sm">
-      <Title align="center">Create an account</Title>
+      <Title align="center">Sign In</Title>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextInput
           placeholder="Enter email"
@@ -72,10 +83,12 @@ const RegisterPage: NextPage = () => {
         <p role="alert" className="error">
           {errors.password?.message}
         </p>
-        <button className="btn">Register</button>
+        <button className="btn">
+          <span>{loading && <Loader size="xs" color="yellow" />}Sign In</span>
+        </button>
       </form>
     </Container>
   );
 };
 
-export default RegisterPage;
+export default SignInPage;
