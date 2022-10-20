@@ -1,11 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../../utils/supabase";
+import { supabase } from "../../utils/supabase";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
+    res.status(200).json({ message: "made it" });
+  } else if (req.method === "POST") {
     try {
       const { email, password } = req.body;
       const { data, error } = await supabase.auth.signUp({
@@ -17,9 +19,7 @@ export default async function handler(
     } catch (e) {
       res.status(500).json({ message: `Something went wrong` });
     }
-  }
-  // HTTP method not supported!
-  else {
+  } else {
     res.setHeader("Allow", ["POST"]);
     res
       .status(405)
