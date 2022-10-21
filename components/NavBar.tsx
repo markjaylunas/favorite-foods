@@ -1,28 +1,28 @@
 import { Button, Group } from "@mantine/core";
-import { Session } from "@supabase/supabase-js";
-import { setCookie } from "cookies-next";
+// import { Session } from "@supabase/supabase-js";
+// import { setCookie } from "cookies-next";
 import Link from "next/link";
-import { useState } from "react";
-import { supabase } from "../utils/supabase";
+// import { useState } from "react";
+// import { supabase } from "../utils/supabase";
 import ThemeButton from "./ThemeButton";
 
 const NavBar = () => {
-  const [session, setSession] = useState<Session>();
+  // const [session, setSession] = useState<Session>();
 
-  const getCurrentUser = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (session?.user) {
-      setCookie("session", JSON.stringify(session));
-      setSession(session);
-    }
-  };
-  getCurrentUser();
+  // const getCurrentUser = async () => {
+  //   const {
+  //     data: { session },
+  //   } = await supabase.auth.getSession();
+  //   if (session?.user) {
+  //     setCookie("session", JSON.stringify(session));
+  //     setSession(session);
+  //   }
+  // };
+  // getCurrentUser();
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error(error);
+    // const { error } = await supabase.auth.signOut();
+    // if (error) console.error(error);
   };
   return (
     <nav className="nav_container">
@@ -32,7 +32,7 @@ const NavBar = () => {
           <Link href="/movie">Movies</Link>
         </Group>
         <Group>
-          {!session ? (
+          {true ? (
             <>
               <Link href="/register">Register</Link>
               <Link href="/signin">Sign In</Link>
