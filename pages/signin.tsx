@@ -1,10 +1,10 @@
 import { Container, Loader, TextInput, Title } from "@mantine/core";
+import axios from "axios";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { supabase } from "../utils/supabase";
 
 type Form = {
   email: string;
@@ -23,27 +23,41 @@ const SignInPage: NextPage = () => {
 
   const router = useRouter();
 
-  const signInWithEmail = async ({ email, password }: Form) => {
+  const signInWithEmailPass = async (data: Form) => {
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-    if (error) {
-      toast.error(error.message);
-      setLoading(false);
-      return;
+    const toastLoading = toast.loading("Please wait...");
+    try {
+      const response = await axios.post("/api/signin", data);
+      const { user, message } = await response.data;
+
+      if (user) {
+        router.push("/");
+        toast.update(toastLoading, {
+          render: message,
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        toast.update(toastLoading, {
+          render:
+            err.response?.data.error.message || err.response?.data.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      } else {
+        console.log(err);
+      }
     }
     setLoading(false);
-    router.push("/");
-    toast(`Signed in as ${data.user?.email}`);
   };
-
   const onSubmit = (data: Form) => {
-    signInWithEmail(data);
+    signInWithEmailPass(data);
     reset();
   };
-
   return (
     <Container size="sm">
       <Title align="center">Sign In</Title>

@@ -1,7 +1,15 @@
-import { Container, Loader, TextInput, Title } from "@mantine/core";
+import {
+  Container,
+  Group,
+  Paper,
+  Space,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { User } from "@prisma/client";
 import axios from "axios";
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -13,6 +21,8 @@ type Form = {
 
 const RegisterPage: NextPage = () => {
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(true);
+  const [user, setUser] = useState<User>();
   const {
     register,
     handleSubmit,
@@ -20,24 +30,37 @@ const RegisterPage: NextPage = () => {
     formState: { errors },
   } = useForm<Form>();
 
-  const router = useRouter();
-
   const registerUser = async (data: Form) => {
     setLoading(true);
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const res = await axios.post("/api/register", data, config);
-    const { user } = await res.data;
+    const toastLoading = toast.loading("Please wait...");
+    try {
+      const res = await axios.post("/api/register", data);
+      const { user, message } = await res.data;
 
-    if (user) {
-      toast("Account successfully registered");
-      router.push("/signin");
-    } else {
-      toast.error("Failed registration");
+      if (user) {
+        setUser(user);
+        setEmailSent(true);
+        toast.update(toastLoading, {
+          render: message,
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        toast.update(toastLoading, {
+          render:
+            err.response?.data.message || err.response?.data.error.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      } else {
+        console.log(err);
+      }
     }
+
     setLoading(false);
   };
 
@@ -45,6 +68,28 @@ const RegisterPage: NextPage = () => {
     registerUser(data);
     reset();
   };
+
+  if (emailSent && user) {
+    return (
+      <Container>
+        <Space h="lg" />
+        <Space h="lg" />
+        <Paper shadow="md" radius="lg" p="xl" withBorder>
+          <Title>Your account has been created!</Title>
+
+          <Group>
+            <Text>
+              To activate it, please click the link we&apos;ve sent to{" "}
+            </Text>
+            <Text underline color="yellow">
+              {user?.email}
+            </Text>
+          </Group>
+        </Paper>
+      </Container>
+    );
+  }
+
   return (
     <Container size="sm">
       <Title align="center">Create an account</Title>
@@ -84,8 +129,8 @@ const RegisterPage: NextPage = () => {
         <p role="alert" className="error">
           {errors.password?.message}
         </p>
-        <button className="btn">
-          <span>{loading && <Loader />}</span> Register
+        <button className="btn" disabled={loading ? true : false}>
+          Register
         </button>
       </form>
     </Container>

@@ -3,7 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import IFoodList from "../types/foodList";
 import FoodList, { Type } from "../components/FoodList";
-import { supabase } from "../utils/supabase";
+import prisma from "../utils/prisma";
 
 type Props = {
   foodList: IFoodList;
@@ -31,11 +31,15 @@ const Home: NextPage<Props> = ({ foodList }) => {
 export default Home;
 
 export const getServerSideProps = async () => {
-  const { data: Food } = await supabase.from("Food").select("*");
-
+  const user = await prisma.user.findFirst({
+    where: { id: "3ea5846f-ad01-4466-83f9-6436a50e975f" },
+  });
+  const postList = await prisma.post.findMany({
+    where: { authorId: user?.id },
+  });
   return {
     props: {
-      foodList: Food,
+      foodList: JSON.parse(JSON.stringify(postList)),
     },
   };
 };
