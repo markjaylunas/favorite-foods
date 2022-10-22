@@ -10,13 +10,20 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
-import { GetServerSidePropsContext } from "next";
-import { getCookie, setCookie } from "cookies-next";
 import NavBar from "../components/NavBar";
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
-  const { Component, pageProps } = props;
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
+import { setCookie, getCookie } from "cookies-next";
+import { GetServerSidePropsContext } from "next";
 
+export default function App(
+  props: AppProps<{
+    initialSession: Session;
+  }> & { colorScheme: ColorScheme }
+) {
+  const { Component, pageProps } = props;
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
     props.colorScheme
   );
@@ -29,36 +36,40 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
     });
   };
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
     >
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{ colorScheme }}
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
       >
-        <NavBar />
-        <Component {...pageProps} />
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          limit={1}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme={colorScheme}
-        />
-      </MantineProvider>
-    </ColorSchemeProvider>
+        <MantineProvider
+          withGlobalStyles
+          withNormalizeCSS
+          theme={{ colorScheme: "dark" }}
+        >
+          <NavBar />
+          <Component {...pageProps} />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            limit={1}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme={"dark"}
+          />
+        </MantineProvider>
+      </ColorSchemeProvider>
+    </SessionContextProvider>
   );
 }
 
 App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  // get color scheme from cookie
   colorScheme: getCookie("mantine-color-scheme", ctx) || "light",
 });

@@ -13,13 +13,13 @@ const Home: NextPage<Props> = ({ foodList }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Favourite Food</title>
-        <meta name="description" content="List of my favourite foods" />
+        <title>Secret | Favorite</title>
+        <meta name="description" content="List of public favorites" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <header className={styles.header}>
-        <h1>Favourite Foods</h1>
+        <h1>Secret Page</h1>
       </header>
       <main className={styles.main}>
         <FoodList type={Type.Food} foodList={foodList} />
@@ -31,11 +31,8 @@ const Home: NextPage<Props> = ({ foodList }) => {
 export default Home;
 
 export const getServerSideProps = async () => {
-  const user = await prisma.user.findFirst({
-    where: { id: "3ea5846f-ad01-4466-83f9-6436a50e975f" },
-  });
   const postList = await prisma.post.findMany({
-    where: { authorId: user?.id },
+    where: { isPublic: true },
   });
   return {
     props: {

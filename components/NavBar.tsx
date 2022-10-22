@@ -1,46 +1,59 @@
-import { Button, Group } from "@mantine/core";
-// import { Session } from "@supabase/supabase-js";
-// import { setCookie } from "cookies-next";
+import { Avatar, Group, Menu, UnstyledButton } from "@mantine/core";
+import { useSessionContext } from "@supabase/auth-helpers-react";
 import Link from "next/link";
-// import { useState } from "react";
-// import { supabase } from "../utils/supabase";
+import { useRouter } from "next/router";
+import { FC } from "react";
+import { toast } from "react-toastify";
 import ThemeButton from "./ThemeButton";
 
-const NavBar = () => {
-  // const [session, setSession] = useState<Session>();
-
-  // const getCurrentUser = async () => {
-  //   const {
-  //     data: { session },
-  //   } = await supabase.auth.getSession();
-  //   if (session?.user) {
-  //     setCookie("session", JSON.stringify(session));
-  //     setSession(session);
-  //   }
-  // };
-  // getCurrentUser();
+const NavBar: FC = () => {
+  const router = useRouter();
+  const { supabaseClient, session } = useSessionContext();
+  console.log(session);
 
   const handleSignOut = async () => {
-    // const { error } = await supabase.auth.signOut();
-    // if (error) console.error(error);
+    const { error } = await supabaseClient.auth.signOut();
+    if (error) {
+      toast.error(error.message);
+    } else {
+      router.replace("/sign-in");
+    }
   };
   return (
     <nav className="nav_container">
       <div className="navbar">
         <Group>
-          <Link href="/">Foods</Link>
+          <Link href="/">Home</Link>
+          <Link href="/food">Foods</Link>
           <Link href="/movie">Movies</Link>
         </Group>
         <Group>
-          {true ? (
+          {!session ? (
             <>
               <Link href="/register">Register</Link>
-              <Link href="/signin">Sign In</Link>
+              <Link href="/sign-in">Sign In</Link>
             </>
           ) : (
-            <>
-              <Button onClick={handleSignOut}>Sign Out</Button>
-            </>
+            <Menu shadow="sm" width={200}>
+              <Menu.Target>
+                <UnstyledButton>
+                  <Group>
+                    <Avatar size={40} color="gray">
+                      BH
+                    </Avatar>
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Label>User</Menu.Label>
+                <Menu.Item onClick={handleSignOut} color="red">
+                  Sign Out
+                </Menu.Item>
+
+                <Menu.Divider />
+              </Menu.Dropdown>
+            </Menu>
           )}
           <ThemeButton />
         </Group>
