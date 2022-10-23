@@ -7,6 +7,7 @@ import FoodList from "../../components/FoodList";
 import axios from "axios";
 import MovieList from "../../types/movieList";
 import { Type } from "../../components/FoodList";
+import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 
 type Props = {
   movieList: IFoodList;
@@ -33,24 +34,27 @@ const MoviePage: NextPage<Props> = ({ movieList }) => {
 
 export default MoviePage;
 
-export const getServerSideProps = async () => {
-  const API_KEY = process.env.TMDB_API_KEY;
-  const URL = `
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/sign-in",
+  async getServerSideProps() {
+    const API_KEY = process.env.TMDB_API_KEY;
+    const URL = `
   https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&adult=false&language=en-US`;
-  const response = await axios.get(URL);
-  const data: MovieList = await response.data.results;
-  const movieList: IFoodList = data.map((movie) => {
+    const response = await axios.get(URL);
+    const movieListResponse: MovieList = await response.data.results;
+    const movieList: IFoodList = movieListResponse.map((movie) => {
+      return {
+        id: movie.id,
+        title: movie.title,
+        description: movie.overview,
+        image: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
+        rating: movie.vote_average,
+      };
+    });
     return {
-      id: movie.id,
-      title: movie.title,
-      description: movie.overview,
-      image: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
-      rating: movie.vote_average,
+      props: {
+        movieList: movieList,
+      },
     };
-  });
-  return {
-    props: {
-      movieList: movieList,
-    },
-  };
-};
+  },
+});

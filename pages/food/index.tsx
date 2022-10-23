@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import IFoodList from "../../types/foodList";
 import FoodList, { Type } from "../../components/FoodList";
 import prisma from "../../utils/prisma";
@@ -32,12 +32,10 @@ const Home: NextPage<Props> = ({ foodList }) => {
 export default Home;
 
 export const getServerSideProps = withPageAuth({
-  redirectTo: "/signin",
-  async getServerSideProps(ctx, supabase) {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+  redirectTo: "/sign-in",
+  async getServerSideProps(_, supabase) {
+    const { data, error } = await supabase.auth.getUser();
+    const user = data.user;
     if (error) {
       throw error;
     }
@@ -49,6 +47,6 @@ export const getServerSideProps = withPageAuth({
       where: { authorId: user.id },
       orderBy: { createdAt: "desc" },
     });
-    return { props: { foodList: postList } };
+    return { props: { foodList: JSON.parse(JSON.stringify(postList)) } };
   },
 });
