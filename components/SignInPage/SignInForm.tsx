@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import ProviderSignIn from "../ProviderSignIn";
+import ProviderSignIn from "./ProviderSignIn";
 import { IconBrandGoogle, IconBrandFacebook } from "@tabler/icons";
 import MagicEmailSent from "./MagicEmailSent";
 

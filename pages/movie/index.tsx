@@ -2,11 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import IFoodList from "../../types/foodList";
-import FoodList from "../../components/FoodList";
+import FoodList from "../../components/FoodPage/FoodList";
 // import MovieList from "../../types/movieList";
 import axios from "axios";
 import MovieList from "../../types/movieList";
-import { Type } from "../../components/FoodList";
+import { Type } from "../../components/FoodPage/FoodList";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 
 type Props = {

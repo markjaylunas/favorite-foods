@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import IFoodList from "../../types/foodList";
-import FoodList, { Type } from "../../components/FoodList";
+import FoodList, { Type } from "../../components/FoodPage/FoodList";
 import prisma from "../../utils/prisma";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 

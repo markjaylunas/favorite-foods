@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import { FoodItem } from "../types/foodList";
-import styles from "../styles/Home.module.css";
+import { FoodItem } from "../../types/foodList";
+import styles from "../../styles/Home.module.css";
 import Image from "next/image";
 import { Modal } from "@mantine/core";
 

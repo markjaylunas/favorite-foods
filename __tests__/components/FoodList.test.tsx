@@ -2,9 +2,12 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import FoodList, { Type } from "../../components/FoodList";
+import FoodList, { Type } from "../../components/FoodPage/FoodList";
 import foodList from "../../data/foodList";
-import { sortByDecreasing, sortByIncreasing } from "../../components/FoodList";
+import {
+  sortByDecreasing,
+  sortByIncreasing,
+} from "../../components/FoodPage/FoodList";
 
 const expectedFoodList = foodList;
 

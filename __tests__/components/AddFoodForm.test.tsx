@@ -1,9 +1,9 @@
 import React from "react";
 import { screen, render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import AddFoodForm from "../../components/AddFoodForm";
+import AddFoodForm from "../../components/FoodPage/AddFoodForm";
 import { act } from "react-dom/test-utils";
-import { Type } from "../../components/FoodList";
+import { Type } from "../../components/FoodPage/FoodList";
 
 describe("AddFoodForm Component", () => {
   it("should render the form fields", () => {

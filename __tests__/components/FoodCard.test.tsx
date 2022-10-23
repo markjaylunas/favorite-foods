@@ -2,7 +2,7 @@ import React from "react";
 
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import FoodCard from "../../components/FoodCard";
+import FoodCard from "../../components/FoodPage/FoodCard";
 import foodList from "../../data/foodList";
 
 const expectedFoodItem = foodList[0];

@@ -2,7 +2,7 @@ import { Modal, Textarea, TextInput } from "@mantine/core";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import FoodList, { FoodItem } from "../types/foodList";
+import FoodList, { FoodItem } from "../../types/foodList";
 import { Type } from "./FoodList";
 
 type Props = {

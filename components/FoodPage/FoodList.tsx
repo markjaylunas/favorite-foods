@@ -1,10 +1,10 @@
-import styles from "../styles/Home.module.css";
-import FoodList from "../types/foodList";
+import styles from "../../styles/Home.module.css";
+import FoodList from "../../types/foodList";
 import FoodCard from "./FoodCard";
 import { FC, ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Button } from "@mantine/core";
-import AddFoodForm from "../components/AddFoodForm";
-import IFoodList from "../types/foodList";
+import AddFoodForm from "./AddFoodForm";
+import IFoodList from "../../types/foodList";
 
 export enum Type {
   Food = "Food",
