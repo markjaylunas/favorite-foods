@@ -14,8 +14,7 @@ import NavBar from "../components/NavBar";
 
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
-import { setCookie, getCookie } from "cookies-next";
-import { GetServerSidePropsContext } from "next";
+import { useColorScheme } from "@mantine/hooks";
 
 export default function App(
   props: AppProps<{
@@ -23,18 +22,15 @@ export default function App(
   }> & { colorScheme: ColorScheme }
 ) {
   const { Component, pageProps } = props;
+
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    props.colorScheme
-  );
-  const toggleColorScheme = (value?: ColorScheme) => {
-    const nextColorScheme =
-      value || (colorScheme === "dark" ? "light" : "dark");
-    setColorScheme(nextColorScheme);
-    setCookie("mantine-color-scheme", nextColorScheme, {
-      maxAge: 60 * 60 * 24 * 30,
-    });
-  };
+
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] =
+    useState<ColorScheme>(preferredColorScheme);
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
@@ -47,7 +43,7 @@ export default function App(
         <MantineProvider
           withGlobalStyles
           withNormalizeCSS
-          theme={{ colorScheme: "dark" }}
+          theme={{ colorScheme }}
         >
           <NavBar />
           <Component {...pageProps} />
@@ -62,14 +58,10 @@ export default function App(
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme={"dark"}
+            theme={colorScheme}
           />
         </MantineProvider>
       </ColorSchemeProvider>
     </SessionContextProvider>
   );
 }
-
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie("mantine-color-scheme", ctx) || "light",
-});

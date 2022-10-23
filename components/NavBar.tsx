@@ -16,7 +16,7 @@ const NavBar: FC = () => {
     }
     if (event === "SIGNED_OUT") {
       setSession(session);
-      router.push("sign-in");
+      router.push("/sign-in");
     }
   });
 
@@ -26,6 +26,7 @@ const NavBar: FC = () => {
       toast.error(error.message);
     }
   };
+  const handleToProfile = () => router.push("/profile");
 
   return (
     <nav className="nav_container">
@@ -61,14 +62,12 @@ const NavBar: FC = () => {
                   </Group>
                 </Menu.Label>
 
-                <Menu.Item>
-                  <Link href="/profile">Profile</Link>
-                </Menu.Item>
+                <Menu.Item onClick={handleToProfile}>Profile</Menu.Item>
+                <Menu.Divider />
+
                 <Menu.Item onClick={handleSignOut} color="red">
                   Sign Out
                 </Menu.Item>
-
-                <Menu.Divider />
               </Menu.Dropdown>
             </Menu>
           )}
