@@ -24,11 +24,21 @@ model Post {
 }
 
 model User {
-  id        String   @id
-  email     String   @unique
-  provider  String
-  phone     Int?
+  id         String       @id
+  email      String       @unique
+  avatar     String?
+  phone      Int?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Post       Post[]
+  UserSignIn UserSignIn[]
+}
+
+model UserSignIn {
+  id        String   @id @default(uuid())
+  email     String
+  method    String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Post      Post[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
 }

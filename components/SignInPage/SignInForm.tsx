@@ -39,7 +39,7 @@ const SignInForm: FC = () => {
     supabaseClient.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http:/localhost:3000/auth",
+        redirectTo: "https://example.com/welcome",
       },
     });
   };
@@ -48,7 +48,7 @@ const SignInForm: FC = () => {
     supabaseClient.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: "http:/localhost:3000/auth",
+        redirectTo: process.env.REDIRECT_URL_OAUTH,
       },
     });
   };

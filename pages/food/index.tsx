@@ -35,16 +35,17 @@ export const getServerSideProps = withPageAuth({
   redirectTo: "/sign-in",
   async getServerSideProps(_, supabase) {
     const { data, error } = await supabase.auth.getUser();
-    const user = data.user;
+
     if (error) {
       throw error;
     }
-    if (!user) {
+    if (data.user.id === null) {
       return { props: {} };
     }
 
+    const userId = data.user.id;
     const postList = await prisma.post.findMany({
-      where: { authorId: user.id },
+      where: { authorId: userId },
       orderBy: { createdAt: "desc" },
     });
     return { props: { foodList: JSON.parse(JSON.stringify(postList)) } };

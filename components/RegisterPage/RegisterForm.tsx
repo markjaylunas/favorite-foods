@@ -30,8 +30,6 @@ const RegisterForm: FC = () => {
       email: email,
       password: password,
     });
-    console.log(data);
-    console.log(error);
     if (error) {
       toast.update(toastLoading, {
         render: error.message,

@@ -1,6 +1,7 @@
+import { Session } from "@supabase/auth-helpers-nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../utils/prisma";
-import { supabase } from "../../utils/supabase";
+// import prisma from "../../utils/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,37 +9,35 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { email, password } = req.body;
+      const session: Session = req.body;
+      const { id, email } = session.user;
+      const provider = session.user.app_metadata.provider;
 
-      // check if user exists
-      const exists = await prisma.user.findFirst({ where: { email: email } });
-      res.status(200).json({ user: exists });
-      // const { data, error } = await supabase.auth.signUp({
-      //   email: email,
-      //   password: password,
-      // });
+      if (id && email !== undefined && provider !== undefined) {
+        // create user if not exists
+        const userExists = await prisma.user.findFirst({ where: { id: id } });
 
-      // if (error) return res.status(401).json({ error: error.message });
-      // const { user } = data;
-      // if (user?.email && user.app_metadata.provider) {
-      //   const {
-      //     id,
-      //     email,
-      //     app_metadata: { provider },
-      //   } = user;
-      //   const newUser = await prisma.user.create({
-      //     data: { id: id, email: email, provider: provider },
-      //   });
-      //   if (newUser) {
-      //     res
-      //       .status(200)
-      //       .json({ user: newUser, message: "Account successfully created" });
-      //   } else {
-      //     res
-      //       .status(401)
-      //       .json({ user: data.user, message: "Account creation failed" });
-      //   }
-      // }
+        if (userExists === null) {
+          await prisma.user.upsert({
+            where: {
+              id: id,
+            },
+            update: {},
+            create: {
+              id: id,
+              email: email ? email : "unknown",
+            },
+          });
+        }
+
+        // create on sign in success
+        await prisma.userSignIn.create({
+          data: { email: email, method: provider, userId: id },
+        });
+        res.status(201).json({ message: `${email} Authenticated` });
+      } else {
+        res.status(401).json({ message: `Not Authorized` });
+      }
     } catch (e) {
       res.status(500).json({ error: `Something went wrong` });
     }
