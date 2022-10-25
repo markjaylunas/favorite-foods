@@ -79,7 +79,7 @@ const SignInForm: FC = () => {
       });
     }
     if (user) {
-      router.push("/");
+      router.push("/food");
       toast.update(toastLoading, {
         render: `Sign in as ${user.email}`,
         type: "success",

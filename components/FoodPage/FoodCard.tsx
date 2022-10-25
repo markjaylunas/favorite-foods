@@ -11,7 +11,7 @@ type Props = {
 const FoodCard: FC<Props> = ({ foodItem }) => {
   const [opened, setOpened] = useState(false);
   return (
-    <div className={styles.card}>
+    <div className={`card ${styles.card} `}>
       <div className={styles.modal}>
         <Modal
           opened={opened}
