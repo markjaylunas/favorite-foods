@@ -1,47 +1,50 @@
-import { Modal, Textarea, TextInput } from "@mantine/core";
+import { Checkbox, Modal, Textarea, TextInput } from "@mantine/core";
+import { Post } from "@prisma/client";
+import axios from "axios";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import FoodList, { FoodItem } from "../../types/foodList";
 import { Type } from "./FoodList";
-
+import { useState } from "react";
 type Props = {
   type: Type;
   openedAddForm: boolean;
   setOpenedAddForm: Dispatch<SetStateAction<boolean>>;
-  setInitialFoodList: Dispatch<SetStateAction<FoodList>>;
-  setFilteredFoods: Dispatch<SetStateAction<FoodList>>;
+  setInitialFoodList: Dispatch<SetStateAction<Post[]>>;
+  setFilteredFoods: Dispatch<SetStateAction<Post[]>>;
 };
 
-const AddFoodForm: FC<Props> = ({
-  type,
-  openedAddForm,
-  setOpenedAddForm,
-  setInitialFoodList,
-  setFilteredFoods,
-}) => {
+const AddFoodForm: FC<Props> = ({ type, openedAddForm, setOpenedAddForm }) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FoodItem>();
-
+  } = useForm<Post>();
+  const [loading, setLoading] = useState(false);
   const max = type === Type.Movie ? 10 : 5;
-  const formatPhone = (phone: string) => {
-    return phone.replace(/(\d{4})(\d{3})(\d{4})/, "($1) $2 - $3");
-  };
-  const onSubmit = (data: FoodItem) => {
-    const dataFormatPhone =
-      data.phone === undefined
-        ? data
-        : { ...data, phone: formatPhone(data.phone) };
-    const newFood = { ...dataFormatPhone };
-    setInitialFoodList((foodList) => [...foodList, newFood]);
-    setFilteredFoods((foodList) => [...foodList, newFood]);
-    reset();
-    setOpenedAddForm(false);
-    toast(`${newFood.title} added to favourites`);
+  // const formatPhone = (phone: string) => {
+  //   return phone.replace(/(\d{4})(\d{3})(\d{4})/, "($1) $2 - $3");
+  // };
+  const onSubmit = async (data: Post) => {
+    try {
+      setLoading(true);
+      const toastLoading = toast.loading("Saving ...");
+      const newPost = await axios.post("/api/post", data);
+
+      if (newPost) {
+        const title = await newPost.data.post.title;
+        toast.update(toastLoading, {
+          render: `${title} added to favourites`,
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
+      setLoading(false);
+      reset();
+      setOpenedAddForm(false);
+    } catch (error) {}
   };
 
   return (
@@ -115,7 +118,9 @@ const AddFoodForm: FC<Props> = ({
           {errors.rating?.message}
         </p>
 
-        <TextInput
+        <Checkbox label="Public" {...register("isPublic", { value: true })} />
+
+        {/* <TextInput
           label="Phone"
           withAsterisk
           type="number"
@@ -134,9 +139,11 @@ const AddFoodForm: FC<Props> = ({
         />
         <p role="alert" className="error">
           {errors.phone?.message}
-        </p>
+        </p> */}
 
-        <button className="btn">Save</button>
+        <button disabled={loading ? true : false} className="btn">
+          {loading ? "Saving ..." : "Save"}
+        </button>
       </form>
     </Modal>
   );
