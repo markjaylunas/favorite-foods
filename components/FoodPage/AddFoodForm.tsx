@@ -1,6 +1,6 @@
 import { Checkbox, Modal, Textarea, TextInput } from "@mantine/core";
 import { Post } from "@prisma/client";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -14,7 +14,13 @@ type Props = {
   setFilteredFoods: Dispatch<SetStateAction<Post[]>>;
 };
 
-const AddFoodForm: FC<Props> = ({ type, openedAddForm, setOpenedAddForm }) => {
+const AddFoodForm: FC<Props> = ({
+  type,
+  openedAddForm,
+  setOpenedAddForm,
+  setInitialFoodList,
+  setFilteredFoods,
+}) => {
   const {
     register,
     handleSubmit,
@@ -27,24 +33,40 @@ const AddFoodForm: FC<Props> = ({ type, openedAddForm, setOpenedAddForm }) => {
   //   return phone.replace(/(\d{4})(\d{3})(\d{4})/, "($1) $2 - $3");
   // };
   const onSubmit = async (data: Post) => {
+    const toastLoading = toast.loading("Saving ...");
     try {
       setLoading(true);
-      const toastLoading = toast.loading("Saving ...");
-      const newPost = await axios.post("/api/post", data);
+      const response = await axios.post("/api/post", data);
+      const newFood: Post = await response.data.post;
 
-      if (newPost) {
-        const title = await newPost.data.post.title;
+      if (newFood) {
+        setInitialFoodList((foodlist) => [...foodlist, newFood]);
+        setFilteredFoods((foodlist) => [...foodlist, newFood]);
+
         toast.update(toastLoading, {
-          render: `${title} added to favourites`,
+          render: `${newFood.title} added to favourites`,
           type: "success",
           isLoading: false,
           autoClose: 5000,
         });
       }
-      setLoading(false);
       reset();
       setOpenedAddForm(false);
-    } catch (error) {}
+    } catch (error) {
+      const err = error as AxiosError | Error;
+      if (axios.isAxiosError(err)) {
+        setLoading(false);
+        toast.update(toastLoading, {
+          render: err.response?.data.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      } else {
+        console.error(err);
+      }
+    }
+    setLoading(false);
   };
 
   return (

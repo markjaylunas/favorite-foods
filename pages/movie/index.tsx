@@ -1,16 +1,16 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
-import IFoodList from "../../types/foodList";
 import FoodList from "../../components/FoodPage/FoodList";
 // import MovieList from "../../types/movieList";
 import axios from "axios";
 import MovieList from "../../types/movieList";
 import { Type } from "../../components/FoodPage/FoodList";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { Post } from "@prisma/client";
 
 type Props = {
-  movieList: IFoodList;
+  movieList: Post[];
 };
 
 const MoviePage: NextPage<Props> = ({ movieList }) => {
@@ -42,13 +42,17 @@ export const getServerSideProps = withPageAuth({
   https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&adult=false&language=en-US`;
     const response = await axios.get(URL);
     const movieListResponse: MovieList = await response.data.results;
-    const movieList: IFoodList = movieListResponse.map((movie) => {
+    const movieList: Post[] = movieListResponse.map((movie) => {
       return {
-        id: movie.id,
+        id: movie.id.toString(),
         title: movie.title,
         description: movie.overview,
         image: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
-        rating: movie.vote_average,
+        rating: parseFloat(`${movie.vote_average}`),
+        isPublic: false,
+        authorId: "unknown",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
     });
     return {

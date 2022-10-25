@@ -1,11 +1,11 @@
 import { FC, useState } from "react";
-import { FoodItem } from "../../types/foodList";
 import styles from "../../styles/Home.module.css";
 import Image from "next/image";
 import { Modal } from "@mantine/core";
+import { Post } from "@prisma/client";
 
 type Props = {
-  foodItem: FoodItem;
+  foodItem: Post;
 };
 
 const FoodCard: FC<Props> = ({ foodItem }) => {
@@ -47,11 +47,11 @@ const FoodCard: FC<Props> = ({ foodItem }) => {
           <span className={styles.label}>Rating: </span>
           {foodItem.rating}
         </p>
-        <p className={styles.phone}>
+        {/* <p className={styles.phone}>
           {foodItem.phone &&
             foodItem.phone?.length > 0 &&
             `Order: ${foodItem.phone}`}
-        </p>
+        </p> */}
         <p className={styles.description}>{foodItem.description}</p>
       </div>
     </div>

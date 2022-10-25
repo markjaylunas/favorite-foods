@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import IFoodList from "../types/foodList";
 import FoodList, { Type } from "../components/FoodPage/FoodList";
 import prisma from "../utils/prisma";
+import { Post } from "@prisma/client";
 
 type Props = {
-  foodList: IFoodList;
+  foodList: Post[];
 };
 
 const Home: NextPage<Props> = ({ foodList }) => {

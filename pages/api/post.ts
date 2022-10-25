@@ -13,7 +13,7 @@ export default async function handler(
     error,
   } = await supabaseServer.auth.getSession();
 
-  if (error) res.status(401).json({ error: `Not Authorized` });
+  if (error) res.status(401).json({ message: `Not Authorized` });
 
   if (req.method === "POST") {
     try {
@@ -34,7 +34,7 @@ export default async function handler(
         .status(201)
         .json({ post, message: `Post of ${post.title} successfully created.` });
     } catch (e) {
-      res.status(500).json({ error: `Something went wrong` });
+      res.status(500).json({ message: `Something went wrong` });
     }
   } else {
     res.setHeader("Allow", ["POST"]);

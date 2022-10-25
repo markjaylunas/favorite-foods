@@ -1,10 +1,9 @@
 import styles from "../../styles/Home.module.css";
-import FoodList from "../../types/foodList";
 import FoodCard from "./FoodCard";
 import { FC, ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Button } from "@mantine/core";
 import AddFoodForm from "./AddFoodForm";
-import IFoodList from "../../types/foodList";
+import { Post } from "@prisma/client";
 
 export enum Type {
   Food = "Food",
@@ -12,7 +11,7 @@ export enum Type {
 }
 
 type Props = {
-  foodList: FoodList;
+  foodList: Post[];
   type: Type;
 };
 
@@ -27,17 +26,16 @@ type FormData = {
   sort: Sort;
 };
 
-export const sortByIncreasing = (arr: FoodList) =>
+export const sortByIncreasing = (arr: Post[]) =>
   arr.sort((a, b) => a.rating - b.rating);
-export const sortByDecreasing = (arr: FoodList) =>
+export const sortByDecreasing = (arr: Post[]) =>
   arr.sort((a, b) => b.rating - a.rating);
 
 const FoodList: FC<Props> = ({ foodList, type = Type.Food }) => {
   const initialFormData = { filter: "", sort: Sort.Default };
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [initialFoodList, setInitialFoodList] = useState<IFoodList>(foodList);
-  const [filteredFoods, setFilteredFoods] =
-    useState<IFoodList>(initialFoodList);
+  const [initialFoods, setInitialFoods] = useState<Post[]>(foodList);
+  const [filteredFoods, setFilteredFoods] = useState<Post[]>(initialFoods);
   const [openedAddForm, setOpenedAddForm] = useState(false);
 
   const handleOnChange = (
@@ -57,12 +55,12 @@ const FoodList: FC<Props> = ({ foodList, type = Type.Food }) => {
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     if (formData.filter.length > 0) {
-      const filtered = initialFoodList.filter((food) =>
+      const filtered = initialFoods.filter((food) =>
         food.title.toLowerCase().includes(formData.filter.toLowerCase())
       );
       setFilteredFoods(filtered);
     } else {
-      setFilteredFoods(initialFoodList);
+      setFilteredFoods(initialFoods);
     }
   };
 
@@ -71,8 +69,8 @@ const FoodList: FC<Props> = ({ foodList, type = Type.Food }) => {
       setFilteredFoods((item) => sortByIncreasing([...item]));
     else if (formData.sort === Sort.Decreasing)
       setFilteredFoods((item) => sortByDecreasing([...item]));
-    else setFilteredFoods(initialFoodList);
-  }, [formData.sort, initialFoodList]);
+    else setFilteredFoods(initialFoods);
+  }, [formData.sort, initialFoods]);
 
   return (
     <>
@@ -126,8 +124,8 @@ const FoodList: FC<Props> = ({ foodList, type = Type.Food }) => {
         type={type}
         openedAddForm={openedAddForm}
         setOpenedAddForm={setOpenedAddForm}
-        setInitialFoodList={setInitialFoodList}
         setFilteredFoods={setFilteredFoods}
+        setInitialFoodList={setInitialFoods}
       />
     </>
   );
