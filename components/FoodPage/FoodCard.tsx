@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import styles from "../../styles/Home.module.css";
 import Image from "next/image";
-import { Modal } from "@mantine/core";
+import { Badge, Modal } from "@mantine/core";
 import { Post } from "@prisma/client";
 
 type Props = {
@@ -47,6 +47,7 @@ const FoodCard: FC<Props> = ({ foodItem }) => {
           <span className={styles.label}>Rating: </span>
           {foodItem.rating}
         </p>
+        {foodItem.isPublic && <Badge color="teal">Public</Badge>}
         {/* <p className={styles.phone}>
           {foodItem.phone &&
             foodItem.phone?.length > 0 &&
