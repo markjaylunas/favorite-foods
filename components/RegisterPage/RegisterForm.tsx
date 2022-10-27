@@ -30,6 +30,7 @@ const RegisterForm: FC = () => {
       email: email,
       password: password,
     });
+    const user = data.user;
     if (error) {
       toast.update(toastLoading, {
         render: error.message,
@@ -37,14 +38,33 @@ const RegisterForm: FC = () => {
         isLoading: false,
         autoClose: 5000,
       });
-    } else if (data.user) {
-      setUser(data.user);
-      toast.update(toastLoading, {
-        render: "Email sent!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
+    } else if (user) {
+      const { data, error } = await supabaseClient.from("User").insert([
+        {
+          id: user.id,
+          email: user.email,
+          updatedAt: new Date().toISOString(),
+        },
+      ]);
+
+      if (error?.code === "23505") {
+        toast.update(toastLoading, {
+          render: "Email already exists",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      } else {
+        console.log(data);
+
+        toast.update(toastLoading, {
+          render: "Email sent!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+        setUser(user);
+      }
     } else {
       toast.update(toastLoading, {
         render: "Something went wrong",
