@@ -1,15 +1,32 @@
 import { Container, Space, Title } from "@mantine/core";
 import { User } from "@prisma/client";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Head from "next/head";
-import prisma from "../../utils/prisma";
+import { useState, useEffect } from "react";
+import UserProfile from "../../components/ProfilePage/UserProfile";
 
-type Props = {
-  user: User;
-};
+const ProfilePage: NextPage = () => {
+  const [userProfile, setuserProfile] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const ProfilePage: NextPage<Props> = ({ user }) => {
+  const user = useUser();
+  const supabase = useSupabaseClient();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase
+        .from("User")
+        .select("*")
+        .eq("id", user?.id);
+      const userData = data as unknown as User[];
+      if (error) console.log(error);
+      setuserProfile(userData[0]);
+      setLoading(false);
+    };
+    fetchUser();
+  }, []);
   return (
     <Container size="md" px="xs" my="lg">
       <Head>
@@ -20,7 +37,8 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
 
       <Title order={1}>Profile</Title>
       <Space h="lg" />
-      <ProfilePage user={user} />
+
+      {loading ? <>Loading...</> : <UserProfile user={userProfile} />}
     </Container>
   );
 };
@@ -29,11 +47,4 @@ export default ProfilePage;
 
 export const getServerSideProps = withPageAuth({
   redirectTo: "/sign-in",
-  async getServerSideProps(ctx, supabase) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    const profile = await prisma.user.findFirst({ where: { id: user?.id } });
-    return { props: { user: JSON.parse(JSON.stringify(profile)) } };
-  },
 });
