@@ -6,7 +6,7 @@ import {
   Switch,
   TextInput,
 } from "@mantine/core";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { User, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import ProviderSignIn from "./ProviderSignIn";
 import { IconBrandGoogle, IconBrandFacebook } from "@tabler/icons";
 import MagicEmailSent from "./MagicEmailSent";
+import { v4 as uuidv4 } from "uuid";
 
 type Form = {
   email: string;
@@ -38,18 +39,12 @@ const SignInForm: FC = () => {
   const handleGoogleSignIn = async () => {
     supabaseClient.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: "https://example.com/welcome",
-      },
     });
   };
 
   const handleFacebookSignIn = async () => {
     supabaseClient.auth.signInWithOAuth({
       provider: "facebook",
-      options: {
-        redirectTo: process.env.REDIRECT_URL_OAUTH,
-      },
     });
   };
 
@@ -60,7 +55,9 @@ const SignInForm: FC = () => {
       email,
     });
     if (error) return toast.error(error.message);
-    else setMagicEmail(email);
+    else {
+      setMagicEmail(email);
+    }
   };
 
   const handleSignIn = async (data: Form) => {
@@ -78,22 +75,38 @@ const SignInForm: FC = () => {
         autoClose: 5000,
       });
     }
+
     if (user) {
-      router.push("/food");
+      await userSignInMethod(user, "email");
       toast.update(toastLoading, {
-        render: `Sign in as ${user.email}`,
+        render: `Signed in as ${user.email}`,
         type: "success",
         isLoading: false,
         autoClose: 5000,
       });
     }
     setLoading(false);
+    router.push("/food");
   };
 
   const onSubmit = (data: Form) => {
     if (isMagicLink) handleMagicLink(data);
     else handleSignIn(data);
     reset();
+  };
+
+  const userSignInMethod = async (user: User, method: string) => {
+    const { error } = await supabaseClient.from("UserSignIn").insert([
+      {
+        id: uuidv4(),
+        userId: user.id,
+        email: user.email,
+        method: method,
+      },
+    ]);
+    if (error) {
+      console.error(error);
+    }
   };
 
   return (
