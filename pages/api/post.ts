@@ -1,7 +1,12 @@
 import { Post } from "@prisma/client";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import {
+  createServerSupabaseClient,
+  SupabaseClient,
+} from "@supabase/auth-helpers-nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../utils/prisma";
+
+type ApiUsageRecord = { api_name: string; called_by: string | undefined };
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,6 +19,14 @@ export default async function handler(
   } = await supabaseServer.auth.getSession();
 
   if (error) res.status(401).json({ message: `Not Authorized` });
+
+  await recordApiUsage(
+    {
+      called_by: session?.user.id,
+      api_name: "create_post",
+    },
+    supabaseServer
+  );
 
   if (req.method === "POST") {
     try {
@@ -43,3 +56,15 @@ export default async function handler(
       .json({ message: `HTTP method ${req.method} is not supported.` });
   }
 }
+
+export const recordApiUsage = async (
+  record: ApiUsageRecord,
+  supabase: SupabaseClient
+) => {
+  try {
+    const { error } = await supabase.from("api_usage_record").insert([record]);
+    if (error) throw error;
+  } catch (error) {
+    console.error(error);
+  }
+};
