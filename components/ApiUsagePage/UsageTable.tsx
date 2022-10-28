@@ -7,19 +7,24 @@ type Props = {
 };
 
 const UsageTable: FC<Props> = ({ usageList }) => {
-  const rows = usageList.map((element) => (
-    <tr key={element.id}>
-      <td>{`${new Date(element.called_at)}`}</td>
-      <td>{element.api_name}</td>
-      <td>{element.called_by}</td>
-    </tr>
-  ));
+  const rows = usageList.map((api) => {
+    const api_name = "https://www.test.com/api/" + api.api_name;
+    const date = new Date(api.called_at);
+    const dateFormatted = `${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`;
+    return (
+      <tr key={api.id}>
+        <td>{api_name}</td>
+        <td>{dateFormatted}</td>
+        <td>{api.called_by}</td>
+      </tr>
+    );
+  });
   return (
     <Table>
       <thead>
         <tr>
-          <th>Created At</th>
           <th>API Name</th>
+          <th>Created At</th>
           <th>Called By</th>
         </tr>
       </thead>
