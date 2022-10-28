@@ -24,14 +24,15 @@ model Post {
 }
 
 model User {
-  id         String       @id
-  email      String       @unique
-  avatar     String?
-  phone      Int?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Post       Post[]
-  UserSignIn UserSignIn[]
+  id             String           @id
+  email          String           @unique
+  avatar         String?
+  phone          Int?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  Post           Post[]
+  UserSignIn     UserSignIn[]
+  ApiUsageRecord ApiUsageRecord[]
 }
 
 model UserSignIn {
@@ -41,4 +42,14 @@ model UserSignIn {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+model ApiUsageRecord {
+  id        String   @id @default(uuid())
+  api_name  String
+  called_at DateTime @default(now())
+  user      User     @relation(fields: [called_by], references: [id])
+  called_by String
+
+  @@map("api_usage_record")
 }
