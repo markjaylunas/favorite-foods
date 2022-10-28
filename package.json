@@ -23,6 +23,7 @@
     "@supabase/supabase-js": "^2.0.2",
     "@tabler/icons": "^1.106.0",
     "@types/node": "^18.11.4",
+    "@types/uuid": "^8.3.4",
     "axios": "^1.1.3",
     "compressorjs": "^1.1.1",
     "cookies-next": "^2.1.1",
@@ -32,7 +33,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.37.0",
-    "react-toastify": "^9.0.8"
+    "react-toastify": "^9.0.8",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
