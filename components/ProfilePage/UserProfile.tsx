@@ -16,8 +16,10 @@ const UserProfile: FC<Props> = ({ user }) => {
 
   const handleCompressedUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const toastLoading = toast.loading("Please wait...");
-
-    const currentAvatarPath = getAvatarPath(userProfile.avatar);
+    const currentAvatarPath =
+      userProfile && userProfile.avatar
+        ? getAvatarPath(userProfile.avatar)
+        : "";
 
     const inputFile = e.target.files;
     if (inputFile === null) return;
@@ -35,8 +37,7 @@ const UserProfile: FC<Props> = ({ user }) => {
           );
           if (error) throw error;
           if (data) {
-            if (currentAvatarPath.length > 0)
-              await removeAvatar(currentAvatarPath);
+            await removeAvatar(currentAvatarPath);
             const publicURL = await getAvatarUrl(data.data.path);
             await updateAvatarURL(publicURL);
             toast.update(toastLoading, {
@@ -56,7 +57,7 @@ const UserProfile: FC<Props> = ({ user }) => {
 
   const getAvatarPath = (avatar: string) => {
     if (avatar.length > 0) {
-      return userProfile.avatar.split("avatars/")[1].split("?")[0];
+      return avatar.split("avatars/")[1].split("?")[0];
     } else {
       return avatar;
     }
