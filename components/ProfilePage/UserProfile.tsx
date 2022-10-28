@@ -4,6 +4,7 @@ import { FC, ChangeEvent, useState } from "react";
 import Compressor from "compressorjs";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 type Props = {
   user: User | null;
@@ -12,6 +13,7 @@ type Props = {
 const UserProfile: FC<Props> = ({ user }) => {
   const [userProfile, setUserProfile] = useState<User | null>(user);
   const supabaseClient = useSupabaseClient();
+  const router = useRouter();
 
   const handleCompressedUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const toastLoading = toast.loading("Please wait...");
@@ -30,6 +32,7 @@ const UserProfile: FC<Props> = ({ user }) => {
             isLoading: false,
             autoClose: 5000,
           });
+          router.reload();
         },
       });
     } catch (error) {
@@ -85,7 +88,6 @@ const UserProfile: FC<Props> = ({ user }) => {
       .eq("id", userProfile?.id);
     if (updateError) throw updateError;
     else {
-      console.log(updateData);
       setUserProfile(updateData as unknown as User);
     }
   };
