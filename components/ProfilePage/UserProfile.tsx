@@ -1,7 +1,6 @@
 import { Avatar, Group, Space, Text } from "@mantine/core";
 import { User } from "@prisma/client";
 import { FC, ChangeEvent, useState } from "react";
-import Compressor from "compressorjs";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -17,63 +16,59 @@ const UserProfile: FC<Props> = ({ user }) => {
 
   const handleCompressedUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const toastLoading = toast.loading("Please wait...");
+
+    const currentAvatarPath = getAvatarPath(userProfile.avatar);
+
     const inputFile = e.target.files;
     if (inputFile === null) return;
     const image = inputFile[0];
+    const fileReader = new FileReader();
     try {
-      new Compressor(image, {
-        quality: 0.8,
-        success: async (compressedResult) => {
-          await saveAvatar(compressedResult);
-
-          toast.update(toastLoading, {
-            render: "Uploaded",
-            type: "success",
-            isLoading: false,
-            autoClose: 5000,
-          });
-          router.reload();
-        },
-      });
+      fileReader.readAsDataURL(image || new Blob());
+      fileReader.onload = async () => {
+        if (image) {
+          const { data, error } = await supabaseClient.functions.invoke(
+            "compress-image",
+            {
+              body: image,
+            }
+          );
+          if (error) throw error;
+          if (data) {
+            if (currentAvatarPath.length > 0)
+              await removeAvatar(currentAvatarPath);
+            const publicURL = await getAvatarUrl(data.data.path);
+            await updateAvatarURL(publicURL);
+            toast.update(toastLoading, {
+              render: "Uploaded",
+              type: "success",
+              isLoading: false,
+              autoClose: 5000,
+            });
+            router.reload();
+          }
+        }
+      };
     } catch (error) {
       console.error(error);
     }
   };
 
-  const saveAvatar = async (compressedFile: Blob) => {
-    if (userProfile?.avatar) {
-      await updateAvatar(compressedFile);
+  const getAvatarPath = (avatar: string) => {
+    if (avatar.length > 0) {
+      return userProfile.avatar.split("avatars/")[1].split("?")[0];
     } else {
-      await uploadAvatar(compressedFile);
+      return avatar;
     }
   };
 
-  const uploadAvatar = async (compressedFile: Blob) => {
-    const { data: uploadData, error: uploadError } =
-      await supabaseClient.storage
-        .from("avatars")
-        .upload(`public/${userProfile?.id}`, compressedFile);
-    if (uploadError) {
-      throw uploadError;
-    } else {
-      const publicURL = await getAvatarURL(uploadData.path);
-      updateAvatarURL(publicURL);
-    }
+  const removeAvatar = async (path: string) => {
+    const { data: removeData, error: removeError } =
+      await supabaseClient.storage.from("avatars").remove([path]);
+    if (removeError) throw removeError;
+    return removeData;
   };
-  const updateAvatar = async (compressedFile: Blob) => {
-    const { data: updateData, error: updateError } =
-      await supabaseClient.storage
-        .from("avatars")
-        .update(`public/${userProfile?.id}`, compressedFile);
-    if (updateError) {
-      throw updateError;
-    } else {
-      const publicURL = await getAvatarURL(updateData.path);
-      updateAvatarURL(publicURL);
-    }
-  };
-
-  const getAvatarURL = async (path: string) => {
+  const getAvatarUrl = async (path: string) => {
     const {
       data: { publicUrl },
     } = await supabaseClient.storage.from("avatars").getPublicUrl(path);
@@ -85,10 +80,11 @@ const UserProfile: FC<Props> = ({ user }) => {
     const { data: updateData, error: updateError } = await supabaseClient
       .from("User")
       .update({ avatar: avatarURL })
-      .eq("id", userProfile?.id);
+      .eq("id", userProfile?.id)
+      .select("*");
     if (updateError) throw updateError;
     else {
-      setUserProfile(updateData as unknown as User);
+      setUserProfile(updateData[0] as unknown as User);
     }
   };
 
