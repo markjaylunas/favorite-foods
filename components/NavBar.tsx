@@ -1,4 +1,5 @@
 import { Avatar, Group, Menu, UnstyledButton } from "@mantine/core";
+import { User } from "@prisma/client";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,10 +9,26 @@ import ThemeButton from "./ThemeButton";
 
 const NavBar: FC = () => {
   const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const supabase = useSupabaseClient();
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === "SIGNED_IN") {
+      try {
+        const { data, error } = await supabase
+          .from("User")
+          .select("*")
+          .eq("id", session?.user.id)
+          .limit(1);
+
+        if (error) throw error;
+        else {
+          setUser(data[0]);
+        }
+      } catch (error) {
+        throw error;
+      }
+
       setSession(session);
     }
     if (event === "SIGNED_OUT") {
@@ -26,6 +43,7 @@ const NavBar: FC = () => {
       toast.error(error.message);
     }
   };
+
   const handleToProfile = () => router.push("/profile");
 
   return (
@@ -46,11 +64,16 @@ const NavBar: FC = () => {
             <Menu shadow="sm" width={200}>
               <Menu.Target>
                 <UnstyledButton>
-                  <Group>
-                    <Avatar size={40} color="gray">
-                      BH
-                    </Avatar>
-                  </Group>
+                  {user !== null && (
+                    <Group>
+                      <Avatar
+                        src={user?.avatar}
+                        alt={user?.email}
+                        radius="sm"
+                        size="sm"
+                      />
+                    </Group>
+                  )}
                 </UnstyledButton>
               </Menu.Target>
 
