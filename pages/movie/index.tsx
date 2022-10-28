@@ -51,8 +51,8 @@ export const getServerSideProps = withPageAuth({
         rating: parseFloat(`${movie.vote_average}`),
         isPublic: false,
         authorId: "unknown",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: JSON.parse(JSON.stringify(new Date())),
+        updatedAt: JSON.parse(JSON.stringify(new Date())),
       };
     });
     return {
