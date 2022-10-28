@@ -2,10 +2,16 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import { useState, useEffect } from "react";
-import { ApiUsageRecord } from "@prisma/client";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import UsageTable from "../../components/ApiUsagePage/UsageTable";
 import { Loader } from "@mantine/core";
+
+type ApiUsageRecord = {
+  id: string;
+  api_name: string;
+  called_at: Date;
+  called_by: string;
+};
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(true);
