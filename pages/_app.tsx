@@ -2,7 +2,6 @@ import "normalize.css";
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useEffect } from "react";
 import { AppProps } from "next/app";
 import {
   ColorScheme,
@@ -16,7 +15,6 @@ import NavBar from "../components/NavBar";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useColorScheme } from "@mantine/hooks";
-import axios from "axios";
 
 export default function App(
   props: AppProps<{
@@ -32,19 +30,6 @@ export default function App(
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
-
-  useEffect(() => {
-    supabaseClient.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_IN") {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        await axios.post("/api/auth", session, config);
-      }
-    });
-  }, [supabaseClient.auth]);
 
   return (
     <SessionContextProvider
