@@ -1,6 +1,12 @@
 import { Table } from "@mantine/core";
-import { ApiUsageRecord } from "@prisma/client";
 import { FC } from "react";
+
+type ApiUsageRecord = {
+  id: string;
+  api_name: string;
+  called_at: Date;
+  called_by: string;
+};
 
 type Props = {
   usageList: ApiUsageRecord[];
