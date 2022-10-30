@@ -67,6 +67,7 @@ const NavBar: FC = () => {
                   {user !== null && (
                     <Group>
                       <Avatar
+                        className="avatar_button"
                         src={user?.avatar}
                         alt={user?.email}
                         radius="sm"
@@ -88,7 +89,11 @@ const NavBar: FC = () => {
                 <Menu.Item onClick={handleToProfile}>Profile</Menu.Item>
                 <Menu.Divider />
 
-                <Menu.Item onClick={handleSignOut} color="red">
+                <Menu.Item
+                  onClick={handleSignOut}
+                  color="red"
+                  className="sign-out_button"
+                >
                   Sign Out
                 </Menu.Item>
               </Menu.Dropdown>
