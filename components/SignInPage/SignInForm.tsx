@@ -82,7 +82,7 @@ const SignInForm: FC = () => {
         render: `Signed in as ${user.email}`,
         type: "success",
         isLoading: false,
-        autoClose: 5000,
+        autoClose: 1000,
       });
     }
     setLoading(false);
